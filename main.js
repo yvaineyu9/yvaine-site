@@ -1,31 +1,43 @@
-// Nav scroll effect
-const nav = document.querySelector('.nav');
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 10);
-}, { passive: true });
+// ── Nav state ──
+const nav = document.getElementById('nav');
+const hero = document.querySelector('.hero');
 
-// Fade-in on scroll
+function updateNav() {
+  const heroBottom = hero.offsetTop + hero.offsetHeight - 80;
+  const past = window.scrollY > heroBottom;
+  nav.classList.toggle('nav--light', !past);
+  nav.classList.toggle('nav--solid', past);
+}
+
+updateNav();
+window.addEventListener('scroll', updateNav, { passive: true });
+
+// ── Reveal on scroll ──
+const reveals = document.querySelectorAll('.reveal');
 const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
+  entries.forEach((entry, i) => {
     if (entry.isIntersecting) {
+      // Stagger siblings
+      const siblings = entry.target.parentElement.querySelectorAll('.reveal');
+      const index = Array.from(siblings).indexOf(entry.target);
+      entry.target.style.transitionDelay = `${index * 80}ms`;
       entry.target.classList.add('visible');
       observer.unobserve(entry.target);
     }
   });
-}, { threshold: 0.15 });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
-document.querySelectorAll('.section-title, .about-content p, .project-card, .link-item, .thoughts-desc, .thoughts-soon').forEach(el => {
-  el.classList.add('fade-in');
-  observer.observe(el);
-});
+reveals.forEach(el => observer.observe(el));
 
-// Smooth scroll for nav links
+// ── Smooth scroll ──
 document.querySelectorAll('.nav-links a').forEach(link => {
-  link.addEventListener('click', (e) => {
+  link.addEventListener('click', e => {
     e.preventDefault();
     const target = document.querySelector(link.getAttribute('href'));
     if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const offset = 80;
+      const top = target.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top, behavior: 'smooth' });
     }
   });
 });
