@@ -168,29 +168,38 @@ body {
 
 .hero-name {
   font-family: var(--font-serif);
-  font-size: clamp(3rem, 5.5vw, 4rem);
+  font-size: clamp(2.8rem, 5vw, 3.6rem);
   font-weight: 400;
   color: rgba(255, 255, 255, 0.95);
   letter-spacing: -0.03em;
   line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+.hero-role {
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .hero-divider {
-  width: 48px; height: 1px;
+  width: 44px; height: 1px;
   background: rgba(255, 255, 255, 0.18);
-  margin: 26px 0;
+  margin: 22px 0;
 }
 
 .hero-tagline {
-  font-size: 1.05rem;
+  font-size: 0.98rem;
   font-weight: 300;
   line-height: 1.65;
-  color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 16px;
+  color: rgba(255, 255, 255, 0.72);
+  margin-bottom: 14px;
 }
 
 .hero-sub {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   line-height: 1.75;
   color: rgba(255, 255, 255, 0.45);
 }
