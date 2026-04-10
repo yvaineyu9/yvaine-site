@@ -3,16 +3,18 @@ const nav = document.getElementById('nav');
 const hero = document.querySelector('.hero');
 const heroBg = document.querySelector('.hero-bg');
 
+let scrollY = 0;
+
 function onScroll() {
-  const y = window.scrollY;
+  scrollY = window.scrollY;
   // Nav state
   const heroBottom = hero.offsetTop + hero.offsetHeight - 80;
-  const past = y > heroBottom;
+  const past = scrollY > heroBottom;
   nav.classList.toggle('nav--light', !past);
   nav.classList.toggle('nav--solid', past);
   // Parallax: bg moves slower than scroll
-  if (heroBg && y < hero.offsetHeight) {
-    heroBg.style.transform = `translateY(${y * 0.4}px)`;
+  if (heroBg && scrollY < hero.offsetHeight) {
+    heroBg.style.transform = `translateY(${scrollY * 0.4}px)`;
   }
 }
 
@@ -54,6 +56,8 @@ window.addEventListener('scroll', onScroll, { passive: true });
 
   function tick() {
     ctx.clearRect(0, 0, w, h);
+    // Parallax offset based on scroll, deeper particles move less
+    const scrollOffset = scrollY * 0.25;
     for (const p of particles) {
       p.x += p.vx;
       p.y += p.vy;
@@ -63,8 +67,9 @@ window.addEventListener('scroll', onScroll, { passive: true });
       if (p.y < 0) p.y = h;
       if (p.y > h) p.y = 0;
       const alpha = p.baseAlpha * (0.5 + 0.5 * Math.sin(p.twinkle));
+      const drawY = p.y + scrollOffset * (p.r * 0.6);
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.arc(p.x, drawY % h, p.r, 0, Math.PI * 2);
       ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
       ctx.fill();
     }
