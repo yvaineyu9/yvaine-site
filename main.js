@@ -1,7 +1,7 @@
 // ── Nav state + Hero parallax ──
 const nav = document.getElementById('nav');
 const hero = document.querySelector('.hero');
-const heroBg = document.querySelector('.hero-bg');
+const planet = document.getElementById('planet');
 
 let scrollY = 0;
 
@@ -12,9 +12,11 @@ function onScroll() {
   const past = scrollY > heroBottom;
   nav.classList.toggle('nav--light', !past);
   nav.classList.toggle('nav--solid', past);
-  // Parallax: bg moves slower than scroll
-  if (heroBg && scrollY < hero.offsetHeight) {
-    heroBg.style.transform = `translateY(${scrollY * 0.4}px)`;
+  // Planet: parallax translate + counter-clockwise rotation
+  if (planet) {
+    const translateY = scrollY * 0.35;
+    const rotate = -(scrollY * 0.08); // negative = counter-clockwise
+    planet.style.transform = `translate(-50%, calc(-50% + ${translateY}px)) rotate(${rotate}deg)`;
   }
 }
 
