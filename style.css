@@ -109,7 +109,7 @@ body {
 .hero-planet {
   position: absolute;
   top: 50%;
-  left: 22%;
+  left: 50%;
   width: auto;
   height: 110%;
   transform: translate(-50%, -50%);
