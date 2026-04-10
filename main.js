@@ -1,16 +1,84 @@
-// ── Nav state ──
+// ── Nav state + Hero parallax ──
 const nav = document.getElementById('nav');
 const hero = document.querySelector('.hero');
+const heroBg = document.querySelector('.hero-bg');
 
-function updateNav() {
+function onScroll() {
+  const y = window.scrollY;
+  // Nav state
   const heroBottom = hero.offsetTop + hero.offsetHeight - 80;
-  const past = window.scrollY > heroBottom;
+  const past = y > heroBottom;
   nav.classList.toggle('nav--light', !past);
   nav.classList.toggle('nav--solid', past);
+  // Parallax: bg moves slower than scroll
+  if (heroBg && y < hero.offsetHeight) {
+    heroBg.style.transform = `translateY(${y * 0.4}px)`;
+  }
 }
 
-updateNav();
-window.addEventListener('scroll', updateNav, { passive: true });
+onScroll();
+window.addEventListener('scroll', onScroll, { passive: true });
+
+// ── Cosmic particles ──
+(function initParticles() {
+  const canvas = document.getElementById('particles');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w, h, particles = [];
+
+  function resize() {
+    const dpr = window.devicePixelRatio || 1;
+    w = canvas.offsetWidth;
+    h = canvas.offsetHeight;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+  }
+
+  function createParticles() {
+    const count = Math.floor((w * h) / 9000);
+    particles = [];
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 1.4 + 0.2,
+        vx: (Math.random() - 0.5) * 0.08,
+        vy: (Math.random() - 0.5) * 0.08,
+        baseAlpha: Math.random() * 0.6 + 0.2,
+        twinkle: Math.random() * Math.PI * 2,
+      });
+    }
+  }
+
+  function tick() {
+    ctx.clearRect(0, 0, w, h);
+    for (const p of particles) {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.twinkle += 0.02;
+      if (p.x < 0) p.x = w;
+      if (p.x > w) p.x = 0;
+      if (p.y < 0) p.y = h;
+      if (p.y > h) p.y = 0;
+      const alpha = p.baseAlpha * (0.5 + 0.5 * Math.sin(p.twinkle));
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(tick);
+  }
+
+  resize();
+  createParticles();
+  tick();
+  window.addEventListener('resize', () => {
+    resize();
+    createParticles();
+  });
+})();
 
 // ── Reveal on scroll ──
 const reveals = document.querySelectorAll('.reveal');

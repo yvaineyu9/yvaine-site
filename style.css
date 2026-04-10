@@ -92,40 +92,77 @@ body {
 .hero {
   position: relative;
   min-height: 100vh;
-  display: flex;
-  background: var(--black);
+  background: #000;
   overflow: hidden;
 }
 
-/* Left: planet image */
-.hero-image {
-  position: relative;
-  width: 50%;
-  min-height: 100vh;
-  background: url('hero-bg.jpg') center center / cover no-repeat;
-  flex-shrink: 0;
+/* Background planet image — parallax via JS */
+.hero-bg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 130%;
+  background-image: url('hero-bg.jpg');
+  background-repeat: no-repeat;
+  background-position: 18% center;
+  background-size: 55% auto;
+  will-change: transform;
+  z-index: 1;
 }
 
-/* Right: glass panel */
-.hero-panel {
+/* Cosmic particles canvas */
+.hero-particles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Frosted glass overlay covering right half — soft fade from left */
+.hero-overlay {
+  position: absolute;
+  top: 0; right: 0;
+  width: 60%;
+  height: 100%;
+  z-index: 3;
+  backdrop-filter: blur(40px) saturate(1.1);
+  -webkit-backdrop-filter: blur(40px) saturate(1.1);
+  background: linear-gradient(
+    to right,
+    rgba(20, 20, 30, 0) 0%,
+    rgba(20, 20, 30, 0.35) 30%,
+    rgba(20, 20, 30, 0.6) 70%,
+    rgba(15, 15, 25, 0.75) 100%
+  );
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 25%, black 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 25%, black 100%);
+}
+
+/* Content layer — text on the right */
+.hero-content {
   position: relative;
-  width: 50%;
+  z-index: 4;
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 80px 40px 40px;
-  /* Frosted glass over the dark side */
-  background: rgba(12, 12, 14, 0.6);
-  backdrop-filter: blur(60px) saturate(1.2);
-  -webkit-backdrop-filter: blur(60px) saturate(1.2);
-  border-left: 1px solid rgba(255, 255, 255, 0.06);
+  justify-content: flex-end;
+  padding: 80px clamp(40px, 8vw, 120px) 80px 40px;
 }
 
 .hero-glass {
-  max-width: 440px;
+  max-width: 460px;
   width: 100%;
+  padding: 48px 44px;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.03),
+    0 30px 80px rgba(0, 0, 0, 0.5);
 }
 
 .hero-greeting {
@@ -166,12 +203,14 @@ body {
 }
 
 .hero-scroll {
-  margin-top: auto;
+  position: absolute;
+  bottom: 32px; left: 50%;
+  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  padding-bottom: 12px;
+  z-index: 5;
 }
 
 .hero-scroll span {
@@ -379,22 +418,32 @@ body {
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
-  .hero {
-    flex-direction: column;
+  .hero-bg {
+    background-position: center 30%;
+    background-size: 130% auto;
   }
 
-  .hero-image {
+  .hero-overlay {
     width: 100%;
-    min-height: 45vh;
-    position: relative;
+    background: linear-gradient(
+      to bottom,
+      rgba(20, 20, 30, 0) 0%,
+      rgba(20, 20, 30, 0.4) 40%,
+      rgba(15, 15, 25, 0.7) 100%
+    );
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 100%);
   }
 
-  .hero-panel {
-    width: 100%;
-    min-height: auto;
-    padding: 48px 24px 40px;
-    border-left: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  .hero-content {
+    padding: 80px 24px 80px;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .hero-glass {
+    padding: 36px 28px;
+    max-width: 100%;
   }
 
   .section-inner {
