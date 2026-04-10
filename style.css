@@ -91,7 +91,8 @@ body {
 /* ── Hero ── */
 .hero {
   position: relative;
-  min-height: 100vh;
+  height: 50vh;
+  min-height: 420px;
   background: #000;
   overflow: hidden;
 }
@@ -101,11 +102,11 @@ body {
   position: absolute;
   top: 0; left: 0;
   width: 100%;
-  height: 130%;
+  height: 160%;
   background-image: url('hero-bg.jpg');
   background-repeat: no-repeat;
   background-position: 18% center;
-  background-size: 55% auto;
+  background-size: auto 110%;
   will-change: transform;
   z-index: 1;
 }
@@ -144,25 +145,25 @@ body {
 .hero-content {
   position: relative;
   z-index: 4;
-  min-height: 100vh;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding: 80px clamp(40px, 8vw, 120px) 80px 40px;
+  padding: 64px clamp(32px, 6vw, 80px) 64px 40px;
 }
 
 .hero-glass {
-  max-width: 460px;
+  max-width: 420px;
   width: 100%;
-  padding: 48px 44px;
+  padding: 32px 32px;
   background: rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(20px) saturate(1.2);
   -webkit-backdrop-filter: blur(20px) saturate(1.2);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
+  border-radius: 16px;
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.03),
-    0 30px 80px rgba(0, 0, 0, 0.5);
+    0 20px 60px rgba(0, 0, 0, 0.5);
 }
 
 .hero-greeting {
@@ -175,7 +176,7 @@ body {
 
 .hero-name {
   font-family: var(--font-serif);
-  font-size: clamp(3rem, 6vw, 4.2rem);
+  font-size: clamp(2.2rem, 4vw, 3rem);
   font-weight: 400;
   color: rgba(255, 255, 255, 0.95);
   letter-spacing: -0.03em;
@@ -183,22 +184,22 @@ body {
 }
 
 .hero-divider {
-  width: 48px; height: 1px;
+  width: 40px; height: 1px;
   background: rgba(255, 255, 255, 0.15);
-  margin: 28px 0;
+  margin: 18px 0;
 }
 
 .hero-tagline {
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   font-weight: 300;
-  line-height: 1.65;
-  color: rgba(255, 255, 255, 0.6);
-  margin-bottom: 16px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.65);
+  margin-bottom: 12px;
 }
 
 .hero-sub {
-  font-size: 0.85rem;
-  line-height: 1.7;
+  font-size: 0.78rem;
+  line-height: 1.65;
   color: rgba(255, 255, 255, 0.35);
 }
 
@@ -418,9 +419,14 @@ body {
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
+  .hero {
+    height: auto;
+    min-height: 480px;
+  }
+
   .hero-bg {
     background-position: center 30%;
-    background-size: 130% auto;
+    background-size: auto 110%;
   }
 
   .hero-overlay {
@@ -436,13 +442,13 @@ body {
   }
 
   .hero-content {
-    padding: 80px 24px 80px;
+    padding: 80px 24px 60px;
     align-items: flex-end;
     justify-content: center;
   }
 
   .hero-glass {
-    padding: 36px 28px;
+    padding: 28px 24px;
     max-width: 100%;
   }
 
