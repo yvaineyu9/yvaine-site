@@ -1,15 +1,16 @@
 {
   "meta": {
-    "title": "我花2000块把破斯巴鲁改成了家",
-    "author": "（YouTube 搬运·中文字幕版）",
-    "source": "youtube",
+    "title": "2024，我成为了白日梦想家",
+    "author": "阿猪米德",
+    "source": "阿猪米德",
     "source_url": "https://www.youtube.com/watch?v=3_gdxypcCq0",
     "added": "2026-05-29",
     "duration": "12:25",
     "aspect": "4:3 复古DV画幅",
     "theme": "与其交房租，不如把一辆旧森林人改成移动的家——省钱只是借口，真正要的是自由。",
     "bpm": 128,
-    "frames_dir": "frames"
+    "frames_dir": "frames",
+    "cover": "shot_001.jpg"
   },
   "peaks": [
     "5:50 · 夜里改装完成·森林人 hero reveal · 全片音乐最强（-7dB）",
