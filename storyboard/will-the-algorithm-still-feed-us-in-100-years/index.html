@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>全镜头分镜 ·《Will the Algorithm Still Feed Us in 100 Years》</title>
+<style>
+  :root { --bg:#0b0c0f; --panel:#14161b; --panel2:#191c22; --line:#252932;
+    --txt:#eceef2; --dim:#9aa2b0; --soft:#c9ced8; --gold:#e8b04c; --blue:#6bb3ff; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--txt);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    line-height:1.7; }
+  .wrap { max-width:1180px; margin:0 auto; padding:52px 24px 96px; }
+  .kicker { font-size:12px; letter-spacing:.42em; text-transform:uppercase; color:var(--gold); margin:0 0 14px; }
+  h1.title { font-size:36px; line-height:1.15; margin:0 0 12px; font-weight:700; letter-spacing:-.01em; }
+  .meta { color:var(--dim); font-size:14.5px; margin:0 0 18px; }
+  .meta b { color:var(--soft); font-weight:500; }
+  .theme { border-left:2px solid var(--gold); padding:4px 0 4px 16px; margin:0 0 36px;
+    color:var(--soft); font-size:16px; font-style:italic; }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:22px 24px; }
+  .panel .h { font-size:12px; letter-spacing:.28em; text-transform:uppercase; color:var(--gold); margin:0 0 16px; }
+  .bars { display:flex; align-items:flex-end; gap:5px; height:104px; }
+  .bar { flex:1; height:calc(20px + var(--h) * 84px);
+    background:linear-gradient(180deg,#caa14a,#7a5f24); border-radius:4px 4px 2px 2px; opacity:.92; position:relative; }
+  .bar.peak { background:linear-gradient(180deg,#ffd27a,#e8a020); box-shadow:0 0 18px rgba(232,176,76,.45); }
+  .bar.rest { background:linear-gradient(180deg,#3a4150,#2a303b); }
+  .bar .bt { position:absolute; bottom:-20px; left:50%; transform:translateX(-50%); font-size:10px;
+    color:var(--dim); white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .peaks { list-style:none; display:flex; gap:18px; flex-wrap:wrap; margin:30px 0 0; padding:0; color:var(--soft); font-size:13px; }
+  .peaks li { position:relative; padding-left:16px; }
+  .peaks li:before { content:"\2605"; position:absolute; left:0; color:var(--gold); }
+  .arc { display:flex; flex-wrap:wrap; gap:8px; margin:24px 0 8px; }
+  .chip { font-size:12px; color:var(--dim); background:var(--panel2); border:1px solid var(--line);
+    border-radius:999px; padding:5px 12px; text-decoration:none; }
+  .chip:hover { border-color:var(--gold); color:var(--soft); }
+  .chip b { color:var(--gold); margin-right:6px; font-variant-numeric:tabular-nums; }
+  .lead { color:var(--dim); font-size:13px; margin:20px 0 8px; }
+  .lead b { color:var(--gold); }
+  .group { margin-top:40px; padding-top:8px; }
+  .ghead { display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; padding-bottom:10px;
+    border-bottom:2px solid var(--line); }
+  .is-peak .ghead { border-bottom-color:var(--gold); }
+  .ghead .num { font-size:26px; font-weight:700; color:var(--gold); font-variant-numeric:tabular-nums; line-height:1; }
+  .ghead h2 { font-size:20px; margin:0; font-weight:650; }
+  .ghead .time { font-size:13px; color:var(--blue); font-variant-numeric:tabular-nums; }
+  .ghead .cnt { margin-left:auto; font-size:12px; color:var(--dim); }
+  .tag { font-size:11px; letter-spacing:.18em; color:#1a1206; background:var(--gold); padding:2px 9px; border-radius:999px; font-weight:700; }
+  .ctx { margin:14px 0 16px; }
+  .ctx p { margin:0 0 6px; color:var(--soft); font-size:13.5px; display:grid; grid-template-columns:48px 1fr; gap:12px; }
+  .ctx .lab { font-size:11px; letter-spacing:.16em; color:var(--gold); padding-top:3px; }
+  table.shots { width:100%; border-collapse:separate; border-spacing:0; background:var(--panel);
+    border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  .shots thead th { text-align:left; font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--dim); padding:11px 14px; background:var(--panel2); border-bottom:1px solid var(--line); }
+  .shots td { padding:10px 14px; border-bottom:1px solid var(--line); vertical-align:middle; font-size:13.5px; }
+  .shots tr:last-child td { border-bottom:none; }
+  .shots tr:hover td { background:#1b1f27; }
+  .sn { width:42px; color:var(--gold); font-variant-numeric:tabular-nums; font-weight:600; }
+  .fr { width:300px; }
+  .fr img { width:280px; aspect-ratio:4/3; object-fit:cover; display:block; border-radius:7px;
+    border:1px solid var(--line); background:#000; }
+  .io { white-space:nowrap; color:var(--soft); font-variant-numeric:tabular-nums; width:120px; }
+  .io .arr { color:var(--dim); margin:0 5px; }
+  .du { white-space:nowrap; color:var(--dim); font-variant-numeric:tabular-nums; width:64px; }
+  .pace { font-size:11px; padding:2px 8px; border-radius:999px; border:1px solid var(--line); color:var(--dim); }
+  .pace.fast { color:#ff9b6b; border-color:#5a3a2c; background:#241813; }
+  .pace.long { color:var(--blue); border-color:#2c405a; background:#131b24; }
+  .note { color:var(--soft); min-width:240px; font-size:13px; }
+  .note .nl { margin:0 0 3px; }
+  .note .nl:last-child { margin-bottom:0; }
+  .note .nk { display:inline-block; min-width:34px; margin-right:8px; font-size:11px;
+    letter-spacing:.12em; color:var(--gold); }
+  .tech { margin-top:52px; }
+  .tech ol { margin:0; padding-left:22px; color:var(--soft); font-size:14.5px; }
+  .tech li { margin-bottom:10px; }
+  .foot { margin-top:40px; color:var(--dim); font-size:12.5px; text-align:center; }
+  @media print {
+    :root { --bg:#fff; --panel:#fff; --panel2:#f3f0ea; --line:#ddd; --txt:#1b1b1b; --dim:#666; --soft:#333; }
+    .group { break-inside:avoid-page; } .shots tr { break-inside:avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="kicker">全镜头分镜 · Shot-by-Shot Breakdown</p>
+  <h1 class="title">Will the Algorithm Still Feed Us in 100 Years</h1>
+  <p class="meta"><b>羊闻道</b> · 8:43 · 4:3 (1440×1080) · 烧录中英双语字幕 · 全局约 98 BPM · 共 163 个镜头</p>
+  <p class="theme">在注意力经济里，做一条经得起时间检验的影像——用整片的高规格本身作为反证</p>
+
+  <section class="panel">
+    <p class="h">音乐能量曲线 · dBFS</p>
+    <div class="bars">
+<div class="bar " style="--h:0.375" title="黑场淡入·反钩子"><span class="bt">0:00</span></div>
+<div class="bar " style="--h:0.875" title="峰值·影像炫技rap"><span class="bt">0:40</span></div>
+<div class="bar " style="--h:0.500" title="口播·垂直化批判"><span class="bt">1:05</span></div>
+<div class="bar rest" style="--h:0.250" title="留白·算计的代价"><span class="bt">1:50</span></div>
+<div class="bar " style="--h:0.625" title="注意力生意·数据公式"><span class="bt">2:20</span></div>
+<div class="bar rest" style="--h:0.125" title="最深留白·转折"><span class="bt">2:50</span></div>
+<div class="bar " style="--h:0.750" title="渐强·进图书馆"><span class="bt">3:10</span></div>
+<div class="bar " style="--h:0.500" title="文学参照·设问"><span class="bt">4:00</span></div>
+<div class="bar " style="--h:0.750" title="打字机·经得起时间检验"><span class="bt">4:40</span></div>
+<div class="bar rest" style="--h:0.250" title="留白·喘息"><span class="bt">5:00</span></div>
+<div class="bar " style="--h:0.625" title="屋顶·真诚宣言"><span class="bt">5:40</span></div>
+<div class="bar peak" style="--h:1.000" title="峰值·滑板/惊醒高潮"><span class="bt">6:10</span></div>
+<div class="bar rest" style="--h:0.250" title="骤降留白"><span class="bt">6:35</span></div>
+<div class="bar " style="--h:0.750" title="桥上口播·别忘在乎"><span class="bt">7:00</span></div>
+<div class="bar " style="--h:0.375" title="元层自白·较静"><span class="bt">7:30</span></div>
+<div class="bar " style="--h:0.750" title="片尾花絮混剪"><span class="bt">8:10</span></div>
+    </div>
+    <ul class="peaks"><li>0:40–0:55 · 影像诱惑炫技 · 着火摄影机+英文rap (-11dB)</li><li>6:00–6:20 · 滑板/歌词高潮『从幻梦中惊醒』 · 全片最强 (-8dB)</li><li>8:05–8:30 · 片尾幕后分屏混剪 (-13dB)</li></ul>
+  </section>
+
+  <div class="arc"><a class="chip" href="#seg1"><b>01</b>反钩子开场</a><a class="chip" href="#seg2"><b>02</b>影像的诱惑 / 野心</a><a class="chip" href="#seg3"><b>03</b>“全面”真的重要吗 / 垂直化批判</a><a class="chip" href="#seg4"><b>04</b>注意力的生意</a><a class="chip" href="#seg5"><b>05</b>三向奔赴 / 算法时代</a><a class="chip" href="#seg6"><b>06</b>图书馆：文学的参照系</a><a class="chip" href="#seg7"><b>07</b>经得起时间检验</a><a class="chip" href="#seg8"><b>08</b>还有余地 / 真诚宣言</a><a class="chip" href="#seg9"><b>09</b>歌词高潮 / 从幻梦中惊醒</a><a class="chip" href="#seg10"><b>10</b>别忘记你在乎什么</a><a class="chip" href="#seg11"><b>11</b>元层自白 / 行动号召</a><a class="chip" href="#seg12"><b>12</b>幕后混剪 / 片尾</a></div>
+  <p class="lead">逐镜头排列 · <b>快切</b>=镜头&lt;1s（卡点montage）· <b>长镜</b>=&gt;30s（口播/抒情）· 点画面看大图 · 「备注」列逐镜必写 <b>构图</b>（是什么构图）+ <b>运镜</b>（镜头怎么运）</p>
+
+  <main>
+    <section class="group" id="seg1">
+      <div class="ghead">
+        <span class="num">01</span>
+        <h2>反钩子开场</h2>
+        <span class="time">0:00–0:52</span>
+        <span class="cnt">21 镜头</span>
+      </div>
+      <div class="ctx">
+        <p><span class="lab">台词</span>「我真的受够了用钩子作为开场，所以我决定坐在这里，用更极端的行为吸引你的注意。去年11月我发布了那条讲『毕业后找不到工作』的低调视频，它带来了远超预期的反响，让我在那个无路可走的阶段再次相信了自己的选择。我把上一条视频后的全部收入与时间，都投入了这部影片。」</p>
+        <p><span class="lab">音乐</span>黑场淡入，轻垫乐，节奏松弛；口播为主。</p>
+        <p><span class="lab">镜头</span>高架钢梁上俯瞰车流的孤身坐姿 → 手机里回看自己的旧视频 → 雨地中央蓝衣孤身 → 行车窗外流光中仰拍人脸（手持/动态模糊）→ 洗衣房四连身『分身』；以极端取景兑现台词的反讽。</p>
+      </div>
+      <table class="shots">
+        <thead><tr><th>#</th><th>画面</th><th>入–出</th><th>时长</th><th>节奏</th><th>备注（调色/构图/运镜）</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="sn">01</td>
+          <td class="fr"><a href="frames/shot_001.jpg" target="_blank"><img loading="lazy" src="frames/shot_001.jpg" alt="shot 1"></a></td>
+          <td class="io">0:00<span class="arr">→</span>0:03</td>
+          <td class="du">3.4s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>大全景，人物坐画左钢梁、高速车流自右纵深引导，三分线</div><div class="nl"><span class="nk">运镜</span>高角度固定俯拍，微下俯</div></td>
+        </tr>
+        <tr>
+          <td class="sn">02</td>
+          <td class="fr"><a href="frames/shot_002.jpg" target="_blank"><img loading="lazy" src="frames/shot_002.jpg" alt="shot 2"></a></td>
+          <td class="io">0:03<span class="arr">→</span>0:07</td>
+          <td class="du">3.8s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景，人物坐桥沿居中偏左，背景高架延伸</div><div class="nl"><span class="nk">运镜</span>侧逆光固定，轻微手持晃动</div></td>
+        </tr>
+        <tr>
+          <td class="sn">03</td>
+          <td class="fr"><a href="frames/shot_003.jpg" target="_blank"><img loading="lazy" src="frames/shot_003.jpg" alt="shot 3"></a></td>
+          <td class="io">0:07<span class="arr">→</span>0:10</td>
+          <td class="du">3.0s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>大全景俯拍多车道车流</div><div class="nl"><span class="nk">运镜</span>固定高机位，车流自身运动</div></td>
+        </tr>
+        <tr>
+          <td class="sn">04</td>
+          <td class="fr"><a href="frames/shot_004.jpg" target="_blank"><img loading="lazy" src="frames/shot_004.jpg" alt="shot 4"></a></td>
+          <td class="io">0:10<span class="arr">→</span>0:13</td>
+          <td class="du">2.5s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>桌面特写，手机居中浅景深（戏中戏回看旧视频）</div><div class="nl"><span class="nk">运镜</span>固定，微距</div></td>
+        </tr>
+        <tr>
+          <td class="sn">05</td>
+          <td class="fr"><a href="frames/shot_005.jpg" target="_blank"><img loading="lazy" src="frames/shot_005.jpg" alt="shot 5"></a></td>
+          <td class="io">0:13<span class="arr">→</span>0:15</td>
+          <td class="du">2.4s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>大全景对称，人物极小居中立于湿地</div><div class="nl"><span class="nk">运镜</span>固定，正面镜面构图</div></td>
+        </tr>
+        <tr>
+          <td class="sn">06</td>
+          <td class="fr"><a href="frames/shot_006.jpg" target="_blank"><img loading="lazy" src="frames/shot_006.jpg" alt="shot 6"></a></td>
+          <td class="io">0:15<span class="arr">→</span>0:16</td>
+          <td class="du">0.9s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>近景人脸仰拍，背景城市流光</div><div class="nl"><span class="nk">运镜</span>车载手持移动，长曝光拖影</div></td>
+        </tr>
+        <tr>
+          <td class="sn">07</td>
+          <td class="fr"><a href="frames/shot_007.jpg" target="_blank"><img loading="lazy" src="frames/shot_007.jpg" alt="shot 7"></a></td>
+          <td class="io">0:16<span class="arr">→</span>0:17</td>
+          <td class="du">0.6s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>近景仰拍人脸</div><div class="nl"><span class="nk">运镜</span>车载手持移动，流光横移</div></td>
+        </tr>
+        <tr>
+          <td class="sn">08</td>
+          <td class="fr"><a href="frames/shot_008.jpg" target="_blank"><img loading="lazy" src="frames/shot_008.jpg" alt="shot 8"></a></td>
+          <td class="io">0:17<span class="arr">→</span>0:17</td>
+          <td class="du">0.6s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>近景仰拍人脸</div><div class="nl"><span class="nk">运镜</span>车载手持移动</div></td>
+        </tr>
+        <tr>
+          <td class="sn">09</td>
+          <td class="fr"><a href="frames/shot_009.jpg" target="_blank"><img loading="lazy" src="frames/shot_009.jpg" alt="shot 9"></a></td>
+          <td class="io">0:17<span class="arr">→</span>0:18</td>
+          <td class="du">0.6s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>近景仰拍人脸</div><div class="nl"><span class="nk">运镜</span>车载手持移动</div></td>
+        </tr>
+        <tr>
+          <td class="sn">10</td>
+          <td class="fr"><a href="frames/shot_010.jpg" target="_blank"><img loading="lazy" src="frames/shot_010.jpg" alt="shot 10"></a></td>
+          <td class="io">0:18<span class="arr">→</span>0:20</td>
+          <td class="du">2.3s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中景对称，四个『分身』并排于洗衣机前</div><div class="nl"><span class="nk">运镜</span>固定，正面对称</div></td>
+        </tr>
+        <tr>
+          <td class="sn">11</td>
+          <td class="fr"><a href="frames/shot_011.jpg" target="_blank"><img loading="lazy" src="frames/shot_011.jpg" alt="shot 11"></a></td>
+          <td class="io">0:20<span class="arr">→</span>0:23</td>
+          <td class="du">2.9s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>大特写，伦勃朗侧光，人物居中（暗调口播）</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">12</td>
+          <td class="fr"><a href="frames/shot_012.jpg" target="_blank"><img loading="lazy" src="frames/shot_012.jpg" alt="shot 12"></a></td>
+          <td class="io">0:23<span class="arr">→</span>0:25</td>
+          <td class="du">2.5s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中近景，飘窗自然光，红色笔记本点暖</div><div class="nl"><span class="nk">运镜</span>固定，微移</div></td>
+        </tr>
+        <tr>
+          <td class="sn">13</td>
+          <td class="fr"><a href="frames/shot_013.jpg" target="_blank"><img loading="lazy" src="frames/shot_013.jpg" alt="shot 13"></a></td>
+          <td class="io">0:25<span class="arr">→</span>0:26</td>
+          <td class="du">0.6s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写俯拍翻开的书/笔记页</div><div class="nl"><span class="nk">运镜</span>固定，俯视</div></td>
+        </tr>
+        <tr>
+          <td class="sn">14</td>
+          <td class="fr"><a href="frames/shot_014.jpg" target="_blank"><img loading="lazy" src="frames/shot_014.jpg" alt="shot 14"></a></td>
+          <td class="io">0:26<span class="arr">→</span>0:27</td>
+          <td class="du">1.3s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中景静物，木椅居中</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">15</td>
+          <td class="fr"><a href="frames/shot_015.jpg" target="_blank"><img loading="lazy" src="frames/shot_015.jpg" alt="shot 15"></a></td>
+          <td class="io">0:27<span class="arr">→</span>0:29</td>
+          <td class="du">1.3s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，手入画调灯杆，浅景深</div><div class="nl"><span class="nk">运镜</span>固定，跟手微移</div></td>
+        </tr>
+        <tr>
+          <td class="sn">16</td>
+          <td class="fr"><a href="frames/shot_016.jpg" target="_blank"><img loading="lazy" src="frames/shot_016.jpg" alt="shot 16"></a></td>
+          <td class="io">0:29<span class="arr">→</span>0:32</td>
+          <td class="du">3.5s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写器材，金属高光</div><div class="nl"><span class="nk">运镜</span>固定，微移找反光</div></td>
+        </tr>
+        <tr>
+          <td class="sn">17</td>
+          <td class="fr"><a href="frames/shot_017.jpg" target="_blank"><img loading="lazy" src="frames/shot_017.jpg" alt="shot 17"></a></td>
+          <td class="io">0:32<span class="arr">→</span>0:34</td>
+          <td class="du">1.7s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写灯头specular球</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">18</td>
+          <td class="fr"><a href="frames/shot_018.jpg" target="_blank"><img loading="lazy" src="frames/shot_018.jpg" alt="shot 18"></a></td>
+          <td class="io">0:34<span class="arr">→</span>0:36</td>
+          <td class="du">2.3s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中近景，逆光灯架于窗边</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">19</td>
+          <td class="fr"><a href="frames/shot_019.jpg" target="_blank"><img loading="lazy" src="frames/shot_019.jpg" alt="shot 19"></a></td>
+          <td class="io">0:36<span class="arr">→</span>0:39</td>
+          <td class="du">3.1s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>低角度特写，地面与白鞋</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">20</td>
+          <td class="fr"><a href="frames/shot_020.jpg" target="_blank"><img loading="lazy" src="frames/shot_020.jpg" alt="shot 20"></a></td>
+          <td class="io">0:39<span class="arr">→</span>0:41</td>
+          <td class="du">2.1s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，手持相机于窗边</div><div class="nl"><span class="nk">运镜</span>固定，微移</div></td>
+        </tr>
+        <tr>
+          <td class="sn">21</td>
+          <td class="fr"><a href="frames/shot_021.jpg" target="_blank"><img loading="lazy" src="frames/shot_021.jpg" alt="shot 21"></a></td>
+          <td class="io">0:41<span class="arr">→</span>0:42</td>
+          <td class="du">0.9s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中景，下半身入座凳子</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="group is-peak" id="seg2">
+      <div class="ghead">
+        <span class="num">02</span>
+        <h2>影像的诱惑 / 野心</h2>
+        <span class="time">0:52–1:34</span><span class="tag">高潮</span>
+        <span class="cnt">10 镜头</span>
+      </div>
+      <div class="ctx">
+        <p><span class="lab">台词</span>「关于所有即将到来的可能性，我想，我准备好了。」+ 英文rap字幕：I wanna be the new man of the year／I cannot be scared／I gotta do it like Nike Air。「我们迷恋这些惊奇的影像——它不仅能在短时间内传递密集的信息，还能承载观点、审美、执行力，甚至是一个人的形象本身，让表达无限接近全面。」</p>
+        <p><span class="lab">音乐</span>能量峰值①（约-11dB），鼓点+英文rap推进，炫技画面卡点。</p>
+        <p><span class="lab">镜头</span>黑场小人远景 → 着火的拍板与摄影机（创意硬切）→ GQ字幕 → 电影摄影机/镜头特写 → 克隆人头墙；高密度炫技镜头『演示』影像魅力，为反问蓄力。</p>
+      </div>
+      <table class="shots">
+        <thead><tr><th>#</th><th>画面</th><th>入–出</th><th>时长</th><th>节奏</th><th>备注（调色/构图/运镜）</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="sn">22</td>
+          <td class="fr"><a href="frames/shot_022.jpg" target="_blank"><img loading="lazy" src="frames/shot_022.jpg" alt="shot 22"></a></td>
+          <td class="io">0:42<span class="arr">→</span>0:53</td>
+          <td class="du">10.3s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>大全景negative space，人物极小居中于光区</div><div class="nl"><span class="nk">运镜</span>固定，对称</div></td>
+        </tr>
+        <tr>
+          <td class="sn">23</td>
+          <td class="fr"><a href="frames/shot_023.jpg" target="_blank"><img loading="lazy" src="frames/shot_023.jpg" alt="shot 23"></a></td>
+          <td class="io">0:53<span class="arr">→</span>0:55</td>
+          <td class="du">2.0s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中近景，着火的拍板/摄影机，火焰对暗背景</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">24</td>
+          <td class="fr"><a href="frames/shot_024.jpg" target="_blank"><img loading="lazy" src="frames/shot_024.jpg" alt="shot 24"></a></td>
+          <td class="io">0:55<span class="arr">→</span>0:56</td>
+          <td class="du">1.8s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，着火摄影机居中（创意视效）</div><div class="nl"><span class="nk">运镜</span>固定，火焰自身动态</div></td>
+        </tr>
+        <tr>
+          <td class="sn">25</td>
+          <td class="fr"><a href="frames/shot_025.jpg" target="_blank"><img loading="lazy" src="frames/shot_025.jpg" alt="shot 25"></a></td>
+          <td class="io">0:56<span class="arr">→</span>1:03</td>
+          <td class="du">7.1s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景暗调房间，人物画左偏小</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">26</td>
+          <td class="fr"><a href="frames/shot_026.jpg" target="_blank"><img loading="lazy" src="frames/shot_026.jpg" alt="shot 26"></a></td>
+          <td class="io">1:03<span class="arr">→</span>1:07</td>
+          <td class="du">3.6s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写电影摄影机镜头</div><div class="nl"><span class="nk">运镜</span>固定，微移</div></td>
+        </tr>
+        <tr>
+          <td class="sn">27</td>
+          <td class="fr"><a href="frames/shot_027.jpg" target="_blank"><img loading="lazy" src="frames/shot_027.jpg" alt="shot 27"></a></td>
+          <td class="io">1:07<span class="arr">→</span>1:08</td>
+          <td class="du">0.9s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写摄影机顶部拨盘</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">28</td>
+          <td class="fr"><a href="frames/shot_028.jpg" target="_blank"><img loading="lazy" src="frames/shot_028.jpg" alt="shot 28"></a></td>
+          <td class="io">1:08<span class="arr">→</span>1:12</td>
+          <td class="du">4.0s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>黑场/字幕负空间</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">29</td>
+          <td class="fr"><a href="frames/shot_029.jpg" target="_blank"><img loading="lazy" src="frames/shot_029.jpg" alt="shot 29"></a></td>
+          <td class="io">1:12<span class="arr">→</span>1:23</td>
+          <td class="du">11.3s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中近景，重复人脸（克隆）</div><div class="nl"><span class="nk">运镜</span>固定，对称</div></td>
+        </tr>
+        <tr>
+          <td class="sn">30</td>
+          <td class="fr"><a href="frames/shot_030.jpg" target="_blank"><img loading="lazy" src="frames/shot_030.jpg" alt="shot 30"></a></td>
+          <td class="io">1:23<span class="arr">→</span>1:24</td>
+          <td class="du">0.5s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，顶部灯具/天花高光</div><div class="nl"><span class="nk">运镜</span>固定，疑微上摇</div></td>
+        </tr>
+        <tr>
+          <td class="sn">31</td>
+          <td class="fr"><a href="frames/shot_031.jpg" target="_blank"><img loading="lazy" src="frames/shot_031.jpg" alt="shot 31"></a></td>
+          <td class="io">1:24<span class="arr">→</span>1:34</td>
+          <td class="du">10.9s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写暗调，手臂/局部</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="group" id="seg3">
+      <div class="ghead">
+        <span class="num">03</span>
+        <h2>“全面”真的重要吗 / 垂直化批判</h2>
+        <span class="time">1:34–2:01</span>
+        <span class="cnt">4 镜头</span>
+      </div>
+      <div class="ctx">
+        <p><span class="lab">台词</span>「可这种全面，当真重要吗？我们似乎更关注垂直度而非广度：人设要垂直、赛道要细分，哪怕没什么新东西，也能惯以『沉浸式』的标签。但这过度算计的代价，究竟会是什么呢？」</p>
+        <p><span class="lab">音乐</span>回落到中低，氛围 Pad 垫底，给反问留呼吸。</p>
+        <p><span class="lab">镜头</span>电视蓝噪雪花 → 暗处手指向黑碗滴落 → 迷失感的门洞/走廊；用『信号噪点/迷失空间』对位『算计的代价』。</p>
+      </div>
+      <table class="shots">
+        <thead><tr><th>#</th><th>画面</th><th>入–出</th><th>时长</th><th>节奏</th><th>备注（调色/构图/运镜）</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="sn">32</td>
+          <td class="fr"><a href="frames/shot_032.jpg" target="_blank"><img loading="lazy" src="frames/shot_032.jpg" alt="shot 32"></a></td>
+          <td class="io">1:34<span class="arr">→</span>1:35</td>
+          <td class="du">0.7s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>满屏蓝色噪点雪花（媒介噪音）</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">33</td>
+          <td class="fr"><a href="frames/shot_033.jpg" target="_blank"><img loading="lazy" src="frames/shot_033.jpg" alt="shot 33"></a></td>
+          <td class="io">1:35<span class="arr">→</span>1:45</td>
+          <td class="du">9.8s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，暗背景中手向黑碗滴落，主体居中</div><div class="nl"><span class="nk">运镜</span>固定，悬疑低调光</div></td>
+        </tr>
+        <tr>
+          <td class="sn">34</td>
+          <td class="fr"><a href="frames/shot_034.jpg" target="_blank"><img loading="lazy" src="frames/shot_034.jpg" alt="shot 34"></a></td>
+          <td class="io">1:45<span class="arr">→</span>1:55</td>
+          <td class="du">10.1s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中景，门框透光的迷失空间</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">35</td>
+          <td class="fr"><a href="frames/shot_035.jpg" target="_blank"><img loading="lazy" src="frames/shot_035.jpg" alt="shot 35"></a></td>
+          <td class="io">1:55<span class="arr">→</span>2:01</td>
+          <td class="du">6.1s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中景，监视器画中画（店内CCTV）</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="group" id="seg4">
+      <div class="ghead">
+        <span class="num">04</span>
+        <h2>注意力的生意</h2>
+        <span class="time">2:01–2:55</span>
+        <span class="cnt">31 镜头</span>
+      </div>
+      <div class="ctx">
+        <p><span class="lab">台词</span>「就拿我所处的 Vlog 赛道来说：观众想我出剪辑教程，厂商要寄器材做产品推广，而我只需要不断重复自己，作为一名内容的供应商。这种供需关系看似各司其职、维持平衡，却让我感觉自己在参与一场贩卖注意力的生意。当我核对这交易里的数字——五秒完播率、前两秒跳出率、涨粉、带哪些话题又能获得额外曝光——当这一切都能被总结成公式，手段自然取代了目的，让本应施予美的嘴，不断发出最响亮的噪音。」</p>
+        <p><span class="lab">音乐</span>中速平稳，节拍感强；口播密集，画面卡点配数据词。</p>
+        <p><span class="lab">镜头</span>7-Eleven 挂钟 → 满架彩色饮料/店面对称镜头/夜饮 → 俯拍双手打字 → 手写『五秒完播率』于掌心 → 在格纸上画维恩圈/便签墙；用便利店消费意象与具体数据指标坐实『贩卖注意力』。</p>
+      </div>
+      <table class="shots">
+        <thead><tr><th>#</th><th>画面</th><th>入–出</th><th>时长</th><th>节奏</th><th>备注（调色/构图/运镜）</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="sn">36</td>
+          <td class="fr"><a href="frames/shot_036.jpg" target="_blank"><img loading="lazy" src="frames/shot_036.jpg" alt="shot 36"></a></td>
+          <td class="io">2:01<span class="arr">→</span>2:03</td>
+          <td class="du">2.0s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景，便利店饮料冷柜墙对称</div><div class="nl"><span class="nk">运镜</span>固定，疑缓横移</div></td>
+        </tr>
+        <tr>
+          <td class="sn">37</td>
+          <td class="fr"><a href="frames/shot_037.jpg" target="_blank"><img loading="lazy" src="frames/shot_037.jpg" alt="shot 37"></a></td>
+          <td class="io">2:03<span class="arr">→</span>2:06</td>
+          <td class="du">2.3s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，7-Eleven 挂钟正面居中（品牌红绿）</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">38</td>
+          <td class="fr"><a href="frames/shot_038.jpg" target="_blank"><img loading="lazy" src="frames/shot_038.jpg" alt="shot 38"></a></td>
+          <td class="io">2:06<span class="arr">→</span>2:06</td>
+          <td class="du">0.6s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景饮料货架，密集彩色色块</div><div class="nl"><span class="nk">运镜</span>横移/平移</div></td>
+        </tr>
+        <tr>
+          <td class="sn">39</td>
+          <td class="fr"><a href="frames/shot_039.jpg" target="_blank"><img loading="lazy" src="frames/shot_039.jpg" alt="shot 39"></a></td>
+          <td class="io">2:06<span class="arr">→</span>2:07</td>
+          <td class="du">0.6s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中景货架（价签 2/5）</div><div class="nl"><span class="nk">运镜</span>横移</div></td>
+        </tr>
+        <tr>
+          <td class="sn">40</td>
+          <td class="fr"><a href="frames/shot_040.jpg" target="_blank"><img loading="lazy" src="frames/shot_040.jpg" alt="shot 40"></a></td>
+          <td class="io">2:07<span class="arr">→</span>2:08</td>
+          <td class="du">1.1s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中景货架，色块阵列</div><div class="nl"><span class="nk">运镜</span>横移</div></td>
+        </tr>
+        <tr>
+          <td class="sn">41</td>
+          <td class="fr"><a href="frames/shot_041.jpg" target="_blank"><img loading="lazy" src="frames/shot_041.jpg" alt="shot 41"></a></td>
+          <td class="io">2:08<span class="arr">→</span>2:09</td>
+          <td class="du">0.7s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中景，手入画从货架取饮料</div><div class="nl"><span class="nk">运镜</span>固定，跟手</div></td>
+        </tr>
+        <tr>
+          <td class="sn">42</td>
+          <td class="fr"><a href="frames/shot_042.jpg" target="_blank"><img loading="lazy" src="frames/shot_042.jpg" alt="shot 42"></a></td>
+          <td class="io">2:09<span class="arr">→</span>2:09</td>
+          <td class="du">0.6s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景货架瓶装区</div><div class="nl"><span class="nk">运镜</span>横移</div></td>
+        </tr>
+        <tr>
+          <td class="sn">43</td>
+          <td class="fr"><a href="frames/shot_043.jpg" target="_blank"><img loading="lazy" src="frames/shot_043.jpg" alt="shot 43"></a></td>
+          <td class="io">2:09<span class="arr">→</span>2:10</td>
+          <td class="du">0.7s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中景货架绿色罐区</div><div class="nl"><span class="nk">运镜</span>横移/固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">44</td>
+          <td class="fr"><a href="frames/shot_044.jpg" target="_blank"><img loading="lazy" src="frames/shot_044.jpg" alt="shot 44"></a></td>
+          <td class="io">2:10<span class="arr">→</span>2:10</td>
+          <td class="du">0.5s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景，7-Eleven 夜店面对称，人物居中入口（SLURPEE 霓虹）</div><div class="nl"><span class="nk">运镜</span>固定，镜面对称</div></td>
+        </tr>
+        <tr>
+          <td class="sn">45</td>
+          <td class="fr"><a href="frames/shot_045.jpg" target="_blank"><img loading="lazy" src="frames/shot_045.jpg" alt="shot 45"></a></td>
+          <td class="io">2:10<span class="arr">→</span>2:11</td>
+          <td class="du">0.5s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中景，招牌下夜饮，环境霓虹</div><div class="nl"><span class="nk">运镜</span>仰拍固定/微移</div></td>
+        </tr>
+        <tr>
+          <td class="sn">46</td>
+          <td class="fr"><a href="frames/shot_046.jpg" target="_blank"><img loading="lazy" src="frames/shot_046.jpg" alt="shot 46"></a></td>
+          <td class="io">2:11<span class="arr">→</span>2:16</td>
+          <td class="du">5.5s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中近景人物饮罐，背景虚化招牌</div><div class="nl"><span class="nk">运镜</span>手持微晃</div></td>
+        </tr>
+        <tr>
+          <td class="sn">47</td>
+          <td class="fr"><a href="frames/shot_047.jpg" target="_blank"><img loading="lazy" src="frames/shot_047.jpg" alt="shot 47"></a></td>
+          <td class="io">2:16<span class="arr">→</span>2:21</td>
+          <td class="du">4.9s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，便利店局部/手部</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">48</td>
+          <td class="fr"><a href="frames/shot_048.jpg" target="_blank"><img loading="lazy" src="frames/shot_048.jpg" alt="shot 48"></a></td>
+          <td class="io">2:21<span class="arr">→</span>2:22</td>
+          <td class="du">0.5s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>俯拍特写，双手于笔电键盘</div><div class="nl"><span class="nk">运镜</span>固定，俯视</div></td>
+        </tr>
+        <tr>
+          <td class="sn">49</td>
+          <td class="fr"><a href="frames/shot_049.jpg" target="_blank"><img loading="lazy" src="frames/shot_049.jpg" alt="shot 49"></a></td>
+          <td class="io">2:22<span class="arr">→</span>2:22</td>
+          <td class="du">0.5s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，拉环/罐口（消费符号）</div><div class="nl"><span class="nk">运镜</span>固定，微距</div></td>
+        </tr>
+        <tr>
+          <td class="sn">50</td>
+          <td class="fr"><a href="frames/shot_050.jpg" target="_blank"><img loading="lazy" src="frames/shot_050.jpg" alt="shot 50"></a></td>
+          <td class="io">2:22<span class="arr">→</span>2:23</td>
+          <td class="du">0.6s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>俯拍特写，桌面钥匙/便签</div><div class="nl"><span class="nk">运镜</span>固定，俯视</div></td>
+        </tr>
+        <tr>
+          <td class="sn">51</td>
+          <td class="fr"><a href="frames/shot_051.jpg" target="_blank"><img loading="lazy" src="frames/shot_051.jpg" alt="shot 51"></a></td>
+          <td class="io">2:23<span class="arr">→</span>2:25</td>
+          <td class="du">2.1s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>俯拍特写，笔电键盘平面构图（贩卖注意力）</div><div class="nl"><span class="nk">运镜</span>固定，俯视</div></td>
+        </tr>
+        <tr>
+          <td class="sn">52</td>
+          <td class="fr"><a href="frames/shot_052.jpg" target="_blank"><img loading="lazy" src="frames/shot_052.jpg" alt="shot 52"></a></td>
+          <td class="io">2:25<span class="arr">→</span>2:32</td>
+          <td class="du">6.9s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>高角度中景，案头工作</div><div class="nl"><span class="nk">运镜</span>固定，俯视</div></td>
+        </tr>
+        <tr>
+          <td class="sn">53</td>
+          <td class="fr"><a href="frames/shot_053.jpg" target="_blank"><img loading="lazy" src="frames/shot_053.jpg" alt="shot 53"></a></td>
+          <td class="io">2:32<span class="arr">→</span>2:33</td>
+          <td class="du">1.1s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，手于纸面（核对数字）</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">54</td>
+          <td class="fr"><a href="frames/shot_054.jpg" target="_blank"><img loading="lazy" src="frames/shot_054.jpg" alt="shot 54"></a></td>
+          <td class="io">2:33<span class="arr">→</span>2:34</td>
+          <td class="du">0.5s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写俯拍，手在格纸上画图</div><div class="nl"><span class="nk">运镜</span>固定，跟笔微移</div></td>
+        </tr>
+        <tr>
+          <td class="sn">55</td>
+          <td class="fr"><a href="frames/shot_055.jpg" target="_blank"><img loading="lazy" src="frames/shot_055.jpg" alt="shot 55"></a></td>
+          <td class="io">2:34<span class="arr">→</span>2:35</td>
+          <td class="du">1.3s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>大特写，掌心手写『五秒完播率』</div><div class="nl"><span class="nk">运镜</span>固定，微距</div></td>
+        </tr>
+        <tr>
+          <td class="sn">56</td>
+          <td class="fr"><a href="frames/shot_056.jpg" target="_blank"><img loading="lazy" src="frames/shot_056.jpg" alt="shot 56"></a></td>
+          <td class="io">2:35<span class="arr">→</span>2:36</td>
+          <td class="du">0.9s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中近景，戴镜伏案，窗光便签墙</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">57</td>
+          <td class="fr"><a href="frames/shot_057.jpg" target="_blank"><img loading="lazy" src="frames/shot_057.jpg" alt="shot 57"></a></td>
+          <td class="io">2:36<span class="arr">→</span>2:37</td>
+          <td class="du">1.2s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，手持笔/剪刀动作</div><div class="nl"><span class="nk">运镜</span>固定，跟手</div></td>
+        </tr>
+        <tr>
+          <td class="sn">58</td>
+          <td class="fr"><a href="frames/shot_058.jpg" target="_blank"><img loading="lazy" src="frames/shot_058.jpg" alt="shot 58"></a></td>
+          <td class="io">2:37<span class="arr">→</span>2:38</td>
+          <td class="du">0.6s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>俯拍特写，格纸上画维恩圈</div><div class="nl"><span class="nk">运镜</span>固定，俯视</div></td>
+        </tr>
+        <tr>
+          <td class="sn">59</td>
+          <td class="fr"><a href="frames/shot_059.jpg" target="_blank"><img loading="lazy" src="frames/shot_059.jpg" alt="shot 59"></a></td>
+          <td class="io">2:38<span class="arr">→</span>2:38</td>
+          <td class="du">0.8s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>俯拍特写，绘维恩双圆</div><div class="nl"><span class="nk">运镜</span>固定，俯视</div></td>
+        </tr>
+        <tr>
+          <td class="sn">60</td>
+          <td class="fr"><a href="frames/shot_060.jpg" target="_blank"><img loading="lazy" src="frames/shot_060.jpg" alt="shot 60"></a></td>
+          <td class="io">2:38<span class="arr">→</span>2:40</td>
+          <td class="du">1.5s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，手写字于便签</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">61</td>
+          <td class="fr"><a href="frames/shot_061.jpg" target="_blank"><img loading="lazy" src="frames/shot_061.jpg" alt="shot 61"></a></td>
+          <td class="io">2:40<span class="arr">→</span>2:42</td>
+          <td class="du">2.2s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中景剪影，人立于飘窗逆光</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">62</td>
+          <td class="fr"><a href="frames/shot_062.jpg" target="_blank"><img loading="lazy" src="frames/shot_062.jpg" alt="shot 62"></a></td>
+          <td class="io">2:42<span class="arr">→</span>2:45</td>
+          <td class="du">2.8s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中近景，举黄纸于面前（公式）</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">63</td>
+          <td class="fr"><a href="frames/shot_063.jpg" target="_blank"><img loading="lazy" src="frames/shot_063.jpg" alt="shot 63"></a></td>
+          <td class="io">2:45<span class="arr">→</span>2:49</td>
+          <td class="du">4.5s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中景，伏案口播</div><div class="nl"><span class="nk">运镜</span>手持微晃</div></td>
+        </tr>
+        <tr>
+          <td class="sn">64</td>
+          <td class="fr"><a href="frames/shot_064.jpg" target="_blank"><img loading="lazy" src="frames/shot_064.jpg" alt="shot 64"></a></td>
+          <td class="io">2:49<span class="arr">→</span>2:52</td>
+          <td class="du">2.3s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，手伸向投影/CRT 设备</div><div class="nl"><span class="nk">运镜</span>固定，跟手</div></td>
+        </tr>
+        <tr>
+          <td class="sn">65</td>
+          <td class="fr"><a href="frames/shot_065.jpg" target="_blank"><img loading="lazy" src="frames/shot_065.jpg" alt="shot 65"></a></td>
+          <td class="io">2:52<span class="arr">→</span>2:53</td>
+          <td class="du">1.0s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，手插电缆</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">66</td>
+          <td class="fr"><a href="frames/shot_066.jpg" target="_blank"><img loading="lazy" src="frames/shot_066.jpg" alt="shot 66"></a></td>
+          <td class="io">2:53<span class="arr">→</span>2:56</td>
+          <td class="du">2.8s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，投影/CRT 机身</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="group" id="seg5">
+      <div class="ghead">
+        <span class="num">05</span>
+        <h2>三向奔赴 / 算法时代</h2>
+        <span class="time">2:55–3:23</span>
+        <span class="cnt">18 镜头</span>
+      </div>
+      <div class="ctx">
+        <p><span class="lab">台词</span>「我知道，这绝不是创作者单方面的问题，而是与观众和平台的三向奔赴。如果网络环境是我们集体意识的投射，那么算法时代，必然也是我们共同塑造的『业』。」</p>
+        <p><span class="lab">音乐</span>弦乐微起，氛围庄重；为转入正题铺垫。</p>
+        <p><span class="lab">镜头</span>投影出『平台·观众·创作者』三圆维恩图（中心一个问号，标注互利/互配）→ 手掌探进投影 → 逆光沉思的口播变体（强光斑）；把抽象论点画成可见的投影图示。</p>
+      </div>
+      <table class="shots">
+        <thead><tr><th>#</th><th>画面</th><th>入–出</th><th>时长</th><th>节奏</th><th>备注（调色/构图/运镜）</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="sn">67</td>
+          <td class="fr"><a href="frames/shot_067.jpg" target="_blank"><img loading="lazy" src="frames/shot_067.jpg" alt="shot 67"></a></td>
+          <td class="io">2:56<span class="arr">→</span>2:56</td>
+          <td class="du">0.7s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，投影『平台·观众·创作者』三圆维恩图+问号，手探入光</div><div class="nl"><span class="nk">运镜</span>固定，手部动态</div></td>
+        </tr>
+        <tr>
+          <td class="sn">68</td>
+          <td class="fr"><a href="frames/shot_068.jpg" target="_blank"><img loading="lazy" src="frames/shot_068.jpg" alt="shot 68"></a></td>
+          <td class="io">2:56<span class="arr">→</span>2:59</td>
+          <td class="du">2.4s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中近景，灯/投影机暗调</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">69</td>
+          <td class="fr"><a href="frames/shot_069.jpg" target="_blank"><img loading="lazy" src="frames/shot_069.jpg" alt="shot 69"></a></td>
+          <td class="io">2:59<span class="arr">→</span>3:00</td>
+          <td class="du">1.5s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，投影圆形图带文字</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">70</td>
+          <td class="fr"><a href="frames/shot_070.jpg" target="_blank"><img loading="lazy" src="frames/shot_070.jpg" alt="shot 70"></a></td>
+          <td class="io">3:00<span class="arr">→</span>3:03</td>
+          <td class="du">3.0s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中景，窗帘百叶+投影</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">71</td>
+          <td class="fr"><a href="frames/shot_071.jpg" target="_blank"><img loading="lazy" src="frames/shot_071.jpg" alt="shot 71"></a></td>
+          <td class="io">3:03<span class="arr">→</span>3:04</td>
+          <td class="du">1.3s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，投影大字『创作者』虚焦</div><div class="nl"><span class="nk">运镜</span>固定，疑变焦</div></td>
+        </tr>
+        <tr>
+          <td class="sn">72</td>
+          <td class="fr"><a href="frames/shot_072.jpg" target="_blank"><img loading="lazy" src="frames/shot_072.jpg" alt="shot 72"></a></td>
+          <td class="io">3:04<span class="arr">→</span>3:06</td>
+          <td class="du">1.6s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中近景，逆光沉思口播，强镜头光斑</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">73</td>
+          <td class="fr"><a href="frames/shot_073.jpg" target="_blank"><img loading="lazy" src="frames/shot_073.jpg" alt="shot 73"></a></td>
+          <td class="io">3:06<span class="arr">→</span>3:07</td>
+          <td class="du">1.3s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，投影『互利』二字</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">74</td>
+          <td class="fr"><a href="frames/shot_074.jpg" target="_blank"><img loading="lazy" src="frames/shot_074.jpg" alt="shot 74"></a></td>
+          <td class="io">3:07<span class="arr">→</span>3:08</td>
+          <td class="du">0.7s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中近景，逆光思考口播</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">75</td>
+          <td class="fr"><a href="frames/shot_075.jpg" target="_blank"><img loading="lazy" src="frames/shot_075.jpg" alt="shot 75"></a></td>
+          <td class="io">3:08<span class="arr">→</span>3:09</td>
+          <td class="du">0.7s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，投影『算』字虚焦</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">76</td>
+          <td class="fr"><a href="frames/shot_076.jpg" target="_blank"><img loading="lazy" src="frames/shot_076.jpg" alt="shot 76"></a></td>
+          <td class="io">3:09<span class="arr">→</span>3:10</td>
+          <td class="du">1.4s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，投影问号/虚焦图形</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">77</td>
+          <td class="fr"><a href="frames/shot_077.jpg" target="_blank"><img loading="lazy" src="frames/shot_077.jpg" alt="shot 77"></a></td>
+          <td class="io">3:10<span class="arr">→</span>3:11</td>
+          <td class="du">1.4s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中近景，逆光口播（集体意识投射）</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">78</td>
+          <td class="fr"><a href="frames/shot_078.jpg" target="_blank"><img loading="lazy" src="frames/shot_078.jpg" alt="shot 78"></a></td>
+          <td class="io">3:11<span class="arr">→</span>3:13</td>
+          <td class="du">1.3s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>剪影中景，人于投影机旁</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">79</td>
+          <td class="fr"><a href="frames/shot_079.jpg" target="_blank"><img loading="lazy" src="frames/shot_079.jpg" alt="shot 79"></a></td>
+          <td class="io">3:13<span class="arr">→</span>3:14</td>
+          <td class="du">1.6s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，投影维恩图带『?·互利·互配』</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">80</td>
+          <td class="fr"><a href="frames/shot_080.jpg" target="_blank"><img loading="lazy" src="frames/shot_080.jpg" alt="shot 80"></a></td>
+          <td class="io">3:14<span class="arr">→</span>3:16</td>
+          <td class="du">1.7s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景暗调圆厅，人物居中极小</div><div class="nl"><span class="nk">运镜</span>固定，空间仪式感</div></td>
+        </tr>
+        <tr>
+          <td class="sn">81</td>
+          <td class="fr"><a href="frames/shot_081.jpg" target="_blank"><img loading="lazy" src="frames/shot_081.jpg" alt="shot 81"></a></td>
+          <td class="io">3:16<span class="arr">→</span>3:17</td>
+          <td class="du">1.2s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中景，投影图打在桌面</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">82</td>
+          <td class="fr"><a href="frames/shot_082.jpg" target="_blank"><img loading="lazy" src="frames/shot_082.jpg" alt="shot 82"></a></td>
+          <td class="io">3:17<span class="arr">→</span>3:18</td>
+          <td class="du">0.6s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>黑场/字幕（共同塑造的业力）</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">83</td>
+          <td class="fr"><a href="frames/shot_083.jpg" target="_blank"><img loading="lazy" src="frames/shot_083.jpg" alt="shot 83"></a></td>
+          <td class="io">3:18<span class="arr">→</span>3:18</td>
+          <td class="du">0.5s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，手影投在同心圆上</div><div class="nl"><span class="nk">运镜</span>固定，手部动态</div></td>
+        </tr>
+        <tr>
+          <td class="sn">84</td>
+          <td class="fr"><a href="frames/shot_084.jpg" target="_blank"><img loading="lazy" src="frames/shot_084.jpg" alt="shot 84"></a></td>
+          <td class="io">3:18<span class="arr">→</span>3:19</td>
+          <td class="du">0.7s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，投影圆图/手影</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="group" id="seg6">
+      <div class="ghead">
+        <span class="num">06</span>
+        <h2>图书馆：文学的参照系</h2>
+        <span class="time">3:23–4:39</span>
+        <span class="cnt">15 镜头</span>
+      </div>
+      <div class="ctx">
+        <p><span class="lab">台词</span>「我在这个图书馆好不容易找到这几本中文书，这本讲鲁迅。我就想：如果鲁迅活到今天成了文学博主，会怎样？为什么当下的创作环境出不了『把豪门恩怨写成短句的张爱玲』？三毛的撒哈拉是不是也该顺应趋势拍成 Vlog 而不是写成日记？为什么作家的目标是出书、画家的理想是进美术馆，而当下视频创作者的终点，却是挂在小黄车、抽那么几成佣金？」</p>
+        <p><span class="lab">音乐</span>好奇/轻快，能量中等平稳。</p>
+        <p><span class="lab">镜头</span>电梯按钮（↑）进馆 → 宏大图书馆中庭/红柱玻璃环廊/螺旋楼梯（鱼眼广角建立镜头）→ 书架长廊间举书直述（vlog式）；用文学/绘画的『终点』反衬视频创作的『终点』。</p>
+      </div>
+      <table class="shots">
+        <thead><tr><th>#</th><th>画面</th><th>入–出</th><th>时长</th><th>节奏</th><th>备注（调色/构图/运镜）</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="sn">85</td>
+          <td class="fr"><a href="frames/shot_085.jpg" target="_blank"><img loading="lazy" src="frames/shot_085.jpg" alt="shot 85"></a></td>
+          <td class="io">3:19<span class="arr">→</span>3:20</td>
+          <td class="du">0.8s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>大特写，手指按下电梯↑键（进入/上升转场）</div><div class="nl"><span class="nk">运镜</span>固定，跟手</div></td>
+        </tr>
+        <tr>
+          <td class="sn">86</td>
+          <td class="fr"><a href="frames/shot_086.jpg" target="_blank"><img loading="lazy" src="frames/shot_086.jpg" alt="shot 86"></a></td>
+          <td class="io">3:20<span class="arr">→</span>3:23</td>
+          <td class="du">3.2s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中景，图书馆电梯厅，人物走向深处</div><div class="nl"><span class="nk">运镜</span>固定，人物入纵深</div></td>
+        </tr>
+        <tr>
+          <td class="sn">87</td>
+          <td class="fr"><a href="frames/shot_087.jpg" target="_blank"><img loading="lazy" src="frames/shot_087.jpg" alt="shot 87"></a></td>
+          <td class="io">3:23<span class="arr">→</span>3:24</td>
+          <td class="du">0.7s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中景，图书馆扶梯/层叠天花</div><div class="nl"><span class="nk">运镜</span>固定/疑缓移</div></td>
+        </tr>
+        <tr>
+          <td class="sn">88</td>
+          <td class="fr"><a href="frames/shot_088.jpg" target="_blank"><img loading="lazy" src="frames/shot_088.jpg" alt="shot 88"></a></td>
+          <td class="io">3:24<span class="arr">→</span>3:29</td>
+          <td class="du">5.0s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景，红柱中庭玻璃环廊，人物立于曲线</div><div class="nl"><span class="nk">运镜</span>固定，建筑曲线引导</div></td>
+        </tr>
+        <tr>
+          <td class="sn">89</td>
+          <td class="fr"><a href="frames/shot_089.jpg" target="_blank"><img loading="lazy" src="frames/shot_089.jpg" alt="shot 89"></a></td>
+          <td class="io">3:29<span class="arr">→</span>3:36</td>
+          <td class="du">7.3s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>大全景，宏大阅览中庭，人物立于环廊（鱼眼广角）</div><div class="nl"><span class="nk">运镜</span>固定，广角包裹</div></td>
+        </tr>
+        <tr>
+          <td class="sn">90</td>
+          <td class="fr"><a href="frames/shot_090.jpg" target="_blank"><img loading="lazy" src="frames/shot_090.jpg" alt="shot 90"></a></td>
+          <td class="io">3:36<span class="arr">→</span>3:43</td>
+          <td class="du">7.1s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景，暗调书架长廊，人物极小立于尽头</div><div class="nl"><span class="nk">运镜</span>固定，纵深透视</div></td>
+        </tr>
+        <tr>
+          <td class="sn">91</td>
+          <td class="fr"><a href="frames/shot_091.jpg" target="_blank"><img loading="lazy" src="frames/shot_091.jpg" alt="shot 91"></a></td>
+          <td class="io">3:43<span class="arr">→</span>3:46</td>
+          <td class="du">2.8s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，手从书架抽出书</div><div class="nl"><span class="nk">运镜</span>固定，跟手</div></td>
+        </tr>
+        <tr>
+          <td class="sn">92</td>
+          <td class="fr"><a href="frames/shot_092.jpg" target="_blank"><img loading="lazy" src="frames/shot_092.jpg" alt="shot 92"></a></td>
+          <td class="io">3:46<span class="arr">→</span>4:17</td>
+          <td class="du">31.5s</td>
+          <td class="rh"><span class="pace long">长镜</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中近景，书架长廊间举书直述（鱼眼，31s长镜）</div><div class="nl"><span class="nk">运镜</span>手持微晃，准固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">93</td>
+          <td class="fr"><a href="frames/shot_093.jpg" target="_blank"><img loading="lazy" src="frames/shot_093.jpg" alt="shot 93"></a></td>
+          <td class="io">4:17<span class="arr">→</span>4:21</td>
+          <td class="du">3.3s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中近景，举书讲述</div><div class="nl"><span class="nk">运镜</span>手持微晃</div></td>
+        </tr>
+        <tr>
+          <td class="sn">94</td>
+          <td class="fr"><a href="frames/shot_094.jpg" target="_blank"><img loading="lazy" src="frames/shot_094.jpg" alt="shot 94"></a></td>
+          <td class="io">4:21<span class="arr">→</span>4:24</td>
+          <td class="du">2.9s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>大全景，图书馆多层结构，人物小</div><div class="nl"><span class="nk">运镜</span>固定，广角</div></td>
+        </tr>
+        <tr>
+          <td class="sn">95</td>
+          <td class="fr"><a href="frames/shot_095.jpg" target="_blank"><img loading="lazy" src="frames/shot_095.jpg" alt="shot 95"></a></td>
+          <td class="io">4:24<span class="arr">→</span>4:28</td>
+          <td class="du">4.1s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景俯拍，红色螺旋楼梯+行人</div><div class="nl"><span class="nk">运镜</span>固定，曲线引导</div></td>
+        </tr>
+        <tr>
+          <td class="sn">96</td>
+          <td class="fr"><a href="frames/shot_096.jpg" target="_blank"><img loading="lazy" src="frames/shot_096.jpg" alt="shot 96"></a></td>
+          <td class="io">4:28<span class="arr">→</span>4:30</td>
+          <td class="du">1.9s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>高角度全景，弧形阅览区俯拍</div><div class="nl"><span class="nk">运镜</span>固定，俯视</div></td>
+        </tr>
+        <tr>
+          <td class="sn">97</td>
+          <td class="fr"><a href="frames/shot_097.jpg" target="_blank"><img loading="lazy" src="frames/shot_097.jpg" alt="shot 97"></a></td>
+          <td class="io">4:30<span class="arr">→</span>4:31</td>
+          <td class="du">1.9s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景俯拍，红色弧形阅读桌阵</div><div class="nl"><span class="nk">运镜</span>固定，俯视</div></td>
+        </tr>
+        <tr>
+          <td class="sn">98</td>
+          <td class="fr"><a href="frames/shot_098.jpg" target="_blank"><img loading="lazy" src="frames/shot_098.jpg" alt="shot 98"></a></td>
+          <td class="io">4:31<span class="arr">→</span>4:36</td>
+          <td class="du">4.8s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景中庭，人物倚栏</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">99</td>
+          <td class="fr"><a href="frames/shot_099.jpg" target="_blank"><img loading="lazy" src="frames/shot_099.jpg" alt="shot 99"></a></td>
+          <td class="io">4:36<span class="arr">→</span>4:40</td>
+          <td class="du">3.3s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景，圆形阅览厅</div><div class="nl"><span class="nk">运镜</span>固定/疑缓移</div></td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="group" id="seg7">
+      <div class="ghead">
+        <span class="num">07</span>
+        <h2>经得起时间检验</h2>
+        <span class="time">4:39–5:43</span>
+        <span class="cnt">22 镜头</span>
+      </div>
+      <div class="ctx">
+        <p><span class="lab">台词</span>「在当下的创作环境中，我到底想做些什么——我想做出经得起时间检验的内容。或许在未来，当人们研究短视频到底归属于何种文化形式时，会发现我们依旧拥有过追求精神体验的选择。即便书籍渐渐远离萤幕，真诚、思辨、审美体验，那些先前文化类型具备的特质，也依旧悄悄进行着。」</p>
+        <p><span class="lab">音乐</span>暖意渐起（约-14dB小高点），抒情铺陈。</p>
+        <p><span class="lab">镜头</span>图书馆伏案 → 红色复古打字机敲字（特写多角度）→ 公寓飘窗写作/俯拍案头 → 翻窗爬出 → 仰拍屋檐对蓝天；打字机=慢工留存，翻窗上屋顶=换一个维度的视角。</p>
+      </div>
+      <table class="shots">
+        <thead><tr><th>#</th><th>画面</th><th>入–出</th><th>时长</th><th>节奏</th><th>备注（调色/构图/运镜）</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="sn">100</td>
+          <td class="fr"><a href="frames/shot_100.jpg" target="_blank"><img loading="lazy" src="frames/shot_100.jpg" alt="shot 100"></a></td>
+          <td class="io">4:40<span class="arr">→</span>4:42</td>
+          <td class="du">2.9s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中近景，伏案以手托腮（图书馆）</div><div class="nl"><span class="nk">运镜</span>固定，浅景深</div></td>
+        </tr>
+        <tr>
+          <td class="sn">101</td>
+          <td class="fr"><a href="frames/shot_101.jpg" target="_blank"><img loading="lazy" src="frames/shot_101.jpg" alt="shot 101"></a></td>
+          <td class="io">4:42<span class="arr">→</span>4:43</td>
+          <td class="du">0.7s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景，密集书架阵列</div><div class="nl"><span class="nk">运镜</span>固定，纵深</div></td>
+        </tr>
+        <tr>
+          <td class="sn">102</td>
+          <td class="fr"><a href="frames/shot_102.jpg" target="_blank"><img loading="lazy" src="frames/shot_102.jpg" alt="shot 102"></a></td>
+          <td class="io">4:43<span class="arr">→</span>4:44</td>
+          <td class="du">1.2s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景，书架长廊人物远</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">103</td>
+          <td class="fr"><a href="frames/shot_103.jpg" target="_blank"><img loading="lazy" src="frames/shot_103.jpg" alt="shot 103"></a></td>
+          <td class="io">4:44<span class="arr">→</span>4:45</td>
+          <td class="du">0.9s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，手与笔/纸（打字机区）</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">104</td>
+          <td class="fr"><a href="frames/shot_104.jpg" target="_blank"><img loading="lazy" src="frames/shot_104.jpg" alt="shot 104"></a></td>
+          <td class="io">4:45<span class="arr">→</span>4:46</td>
+          <td class="du">0.7s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，红色复古打字机敲字，暖木桌面</div><div class="nl"><span class="nk">运镜</span>固定，微移</div></td>
+        </tr>
+        <tr>
+          <td class="sn">105</td>
+          <td class="fr"><a href="frames/shot_105.jpg" target="_blank"><img loading="lazy" src="frames/shot_105.jpg" alt="shot 105"></a></td>
+          <td class="io">4:46<span class="arr">→</span>4:49</td>
+          <td class="du">3.3s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>俯拍特写，打字机顶面</div><div class="nl"><span class="nk">运镜</span>固定，俯视</div></td>
+        </tr>
+        <tr>
+          <td class="sn">106</td>
+          <td class="fr"><a href="frames/shot_106.jpg" target="_blank"><img loading="lazy" src="frames/shot_106.jpg" alt="shot 106"></a></td>
+          <td class="io">4:49<span class="arr">→</span>4:51</td>
+          <td class="du">2.1s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，双手于红打字机键</div><div class="nl"><span class="nk">运镜</span>固定，跟手</div></td>
+        </tr>
+        <tr>
+          <td class="sn">107</td>
+          <td class="fr"><a href="frames/shot_107.jpg" target="_blank"><img loading="lazy" src="frames/shot_107.jpg" alt="shot 107"></a></td>
+          <td class="io">4:51<span class="arr">→</span>4:53</td>
+          <td class="du">1.4s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中近景，手持白色包装盒</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">108</td>
+          <td class="fr"><a href="frames/shot_108.jpg" target="_blank"><img loading="lazy" src="frames/shot_108.jpg" alt="shot 108"></a></td>
+          <td class="io">4:53<span class="arr">→</span>4:54</td>
+          <td class="du">1.1s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>大特写，打字机键位</div><div class="nl"><span class="nk">运镜</span>固定，微距</div></td>
+        </tr>
+        <tr>
+          <td class="sn">109</td>
+          <td class="fr"><a href="frames/shot_109.jpg" target="_blank"><img loading="lazy" src="frames/shot_109.jpg" alt="shot 109"></a></td>
+          <td class="io">4:54<span class="arr">→</span>4:55</td>
+          <td class="du">1.3s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，打字机插纸</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">110</td>
+          <td class="fr"><a href="frames/shot_110.jpg" target="_blank"><img loading="lazy" src="frames/shot_110.jpg" alt="shot 110"></a></td>
+          <td class="io">4:55<span class="arr">→</span>5:00</td>
+          <td class="du">5.4s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中景剪影，人立飘窗逆光写作</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">111</td>
+          <td class="fr"><a href="frames/shot_111.jpg" target="_blank"><img loading="lazy" src="frames/shot_111.jpg" alt="shot 111"></a></td>
+          <td class="io">5:00<span class="arr">→</span>5:04</td>
+          <td class="du">4.0s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中近景，白T于窗边</div><div class="nl"><span class="nk">运镜</span>手持微晃</div></td>
+        </tr>
+        <tr>
+          <td class="sn">112</td>
+          <td class="fr"><a href="frames/shot_112.jpg" target="_blank"><img loading="lazy" src="frames/shot_112.jpg" alt="shot 112"></a></td>
+          <td class="io">5:04<span class="arr">→</span>5:09</td>
+          <td class="du">4.1s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>高角度中景，俯拍案头书写</div><div class="nl"><span class="nk">运镜</span>固定，俯视</div></td>
+        </tr>
+        <tr>
+          <td class="sn">113</td>
+          <td class="fr"><a href="frames/shot_113.jpg" target="_blank"><img loading="lazy" src="frames/shot_113.jpg" alt="shot 113"></a></td>
+          <td class="io">5:09<span class="arr">→</span>5:12</td>
+          <td class="du">3.0s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景暗调，门框中两人剪影</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">114</td>
+          <td class="fr"><a href="frames/shot_114.jpg" target="_blank"><img loading="lazy" src="frames/shot_114.jpg" alt="shot 114"></a></td>
+          <td class="io">5:12<span class="arr">→</span>5:16</td>
+          <td class="du">4.4s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中景背影，翻窗爬出（换维度）</div><div class="nl"><span class="nk">运镜</span>固定/手持跟随</div></td>
+        </tr>
+        <tr>
+          <td class="sn">115</td>
+          <td class="fr"><a href="frames/shot_115.jpg" target="_blank"><img loading="lazy" src="frames/shot_115.jpg" alt="shot 115"></a></td>
+          <td class="io">5:16<span class="arr">→</span>5:21</td>
+          <td class="du">5.1s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中景，白T于窗边</div><div class="nl"><span class="nk">运镜</span>手持微晃</div></td>
+        </tr>
+        <tr>
+          <td class="sn">116</td>
+          <td class="fr"><a href="frames/shot_116.jpg" target="_blank"><img loading="lazy" src="frames/shot_116.jpg" alt="shot 116"></a></td>
+          <td class="io">5:21<span class="arr">→</span>5:25</td>
+          <td class="du">3.8s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>极简仰拍，屋檐斜线切蓝天，大留白</div><div class="nl"><span class="nk">运镜</span>固定，仰角</div></td>
+        </tr>
+        <tr>
+          <td class="sn">117</td>
+          <td class="fr"><a href="frames/shot_117.jpg" target="_blank"><img loading="lazy" src="frames/shot_117.jpg" alt="shot 117"></a></td>
+          <td class="io">5:25<span class="arr">→</span>5:27</td>
+          <td class="du">2.1s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>仰拍，屋檐/天空negative space</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">118</td>
+          <td class="fr"><a href="frames/shot_118.jpg" target="_blank"><img loading="lazy" src="frames/shot_118.jpg" alt="shot 118"></a></td>
+          <td class="io">5:27<span class="arr">→</span>5:29</td>
+          <td class="du">2.3s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>仰拍，通天梯子对蓝天（向上母题）</div><div class="nl"><span class="nk">运镜</span>固定，仰角</div></td>
+        </tr>
+        <tr>
+          <td class="sn">119</td>
+          <td class="fr"><a href="frames/shot_119.jpg" target="_blank"><img loading="lazy" src="frames/shot_119.jpg" alt="shot 119"></a></td>
+          <td class="io">5:29<span class="arr">→</span>5:34</td>
+          <td class="du">4.6s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>仰拍，梯子贴墙伸向天</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">120</td>
+          <td class="fr"><a href="frames/shot_120.jpg" target="_blank"><img loading="lazy" src="frames/shot_120.jpg" alt="shot 120"></a></td>
+          <td class="io">5:34<span class="arr">→</span>5:40</td>
+          <td class="du">6.7s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中景，屋顶伸手向天剪影</div><div class="nl"><span class="nk">运镜</span>固定/手持微晃</div></td>
+        </tr>
+        <tr>
+          <td class="sn">121</td>
+          <td class="fr"><a href="frames/shot_121.jpg" target="_blank"><img loading="lazy" src="frames/shot_121.jpg" alt="shot 121"></a></td>
+          <td class="io">5:40<span class="arr">→</span>5:47</td>
+          <td class="du">6.7s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中近景，屋顶人物上半身，城市背景</div><div class="nl"><span class="nk">运镜</span>手持微晃</div></td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="group" id="seg8">
+      <div class="ghead">
+        <span class="num">08</span>
+        <h2>还有余地 / 真诚宣言</h2>
+        <span class="time">5:43–6:19</span>
+        <span class="cnt">15 镜头</span>
+      </div>
+      <div class="ctx">
+        <p><span class="lab">台词</span>「所以我感觉，我们还留有余地。似乎只要带着真诚的生命体验、对追求完美的略带偏执、以及充满信心的个人主观，就总还是能做出些新的东西，让创作越过浮躁喧嚣，往那尚未命名的远方前行。」+ 字幕：we&#x27;re taller in another dimension／you say we&#x27;re smaller。</p>
+        <p><span class="lab">音乐</span>抒情推进，弦乐铺底，临近高潮。</p>
+        <p><span class="lab">镜头</span>屋顶上读书（城市为背景）→ 屋脊剪影/伸手向天 → 落日烟花俯瞰城市 → 翻开的书特写；屋顶/天梯=向上与开阔，把『余地』具象成物理高度。</p>
+      </div>
+      <table class="shots">
+        <thead><tr><th>#</th><th>画面</th><th>入–出</th><th>时长</th><th>节奏</th><th>备注（调色/构图/运镜）</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="sn">122</td>
+          <td class="fr"><a href="frames/shot_122.jpg" target="_blank"><img loading="lazy" src="frames/shot_122.jpg" alt="shot 122"></a></td>
+          <td class="io">5:47<span class="arr">→</span>5:50</td>
+          <td class="du">3.2s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景，屋顶读书，城市天际线背景</div><div class="nl"><span class="nk">运镜</span>固定，黄金时刻</div></td>
+        </tr>
+        <tr>
+          <td class="sn">123</td>
+          <td class="fr"><a href="frames/shot_123.jpg" target="_blank"><img loading="lazy" src="frames/shot_123.jpg" alt="shot 123"></a></td>
+          <td class="io">5:50<span class="arr">→</span>5:53</td>
+          <td class="du">2.9s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中近景，屋顶仰拍读书对蓝天</div><div class="nl"><span class="nk">运镜</span>固定，仰角</div></td>
+        </tr>
+        <tr>
+          <td class="sn">124</td>
+          <td class="fr"><a href="frames/shot_124.jpg" target="_blank"><img loading="lazy" src="frames/shot_124.jpg" alt="shot 124"></a></td>
+          <td class="io">5:53<span class="arr">→</span>5:54</td>
+          <td class="du">0.5s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>空镜，蓝天流云</div><div class="nl"><span class="nk">运镜</span>固定/疑缓摇</div></td>
+        </tr>
+        <tr>
+          <td class="sn">125</td>
+          <td class="fr"><a href="frames/shot_125.jpg" target="_blank"><img loading="lazy" src="frames/shot_125.jpg" alt="shot 125"></a></td>
+          <td class="io">5:54<span class="arr">→</span>5:56</td>
+          <td class="du">1.7s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>大全景，人物立屋脊极小</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">126</td>
+          <td class="fr"><a href="frames/shot_126.jpg" target="_blank"><img loading="lazy" src="frames/shot_126.jpg" alt="shot 126"></a></td>
+          <td class="io">5:56<span class="arr">→</span>5:56</td>
+          <td class="du">0.5s</td>
+          <td class="rh"><span class="pace fast">快切</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写剪影，手伸向天</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">127</td>
+          <td class="fr"><a href="frames/shot_127.jpg" target="_blank"><img loading="lazy" src="frames/shot_127.jpg" alt="shot 127"></a></td>
+          <td class="io">5:56<span class="arr">→</span>5:58</td>
+          <td class="du">1.6s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景，蓝调暮色民居</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">128</td>
+          <td class="fr"><a href="frames/shot_128.jpg" target="_blank"><img loading="lazy" src="frames/shot_128.jpg" alt="shot 128"></a></td>
+          <td class="io">5:58<span class="arr">→</span>5:59</td>
+          <td class="du">1.0s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写，黑面上翻开的书</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">129</td>
+          <td class="fr"><a href="frames/shot_129.jpg" target="_blank"><img loading="lazy" src="frames/shot_129.jpg" alt="shot 129"></a></td>
+          <td class="io">5:59<span class="arr">→</span>6:06</td>
+          <td class="du">6.9s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>大全景俯瞰，落日/烟花照城市，人物剪影立屋脊</div><div class="nl"><span class="nk">运镜</span>固定，高机位</div></td>
+        </tr>
+        <tr>
+          <td class="sn">130</td>
+          <td class="fr"><a href="frames/shot_130.jpg" target="_blank"><img loading="lazy" src="frames/shot_130.jpg" alt="shot 130"></a></td>
+          <td class="io">6:06<span class="arr">→</span>6:10</td>
+          <td class="du">4.2s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>特写黑场，鞋底/脚（Since I was seventeen）</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">131</td>
+          <td class="fr"><a href="frames/shot_131.jpg" target="_blank"><img loading="lazy" src="frames/shot_131.jpg" alt="shot 131"></a></td>
+          <td class="io">6:10<span class="arr">→</span>6:12</td>
+          <td class="du">1.9s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景，桥下行走（如今从幻梦中惊醒）</div><div class="nl"><span class="nk">运镜</span>固定/手持跟随</div></td>
+        </tr>
+        <tr>
+          <td class="sn">132</td>
+          <td class="fr"><a href="frames/shot_132.jpg" target="_blank"><img loading="lazy" src="frames/shot_132.jpg" alt="shot 132"></a></td>
+          <td class="io">6:12<span class="arr">→</span>6:13</td>
+          <td class="du">1.6s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>低机位特写，滑板贴地（难道这一切都不重要吗）</div><div class="nl"><span class="nk">运镜</span>滑板POV移动，运动模糊</div></td>
+        </tr>
+        <tr>
+          <td class="sn">133</td>
+          <td class="fr"><a href="frames/shot_133.jpg" target="_blank"><img loading="lazy" src="frames/shot_133.jpg" alt="shot 133"></a></td>
+          <td class="io">6:13<span class="arr">→</span>6:14</td>
+          <td class="du">1.1s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景背影，桥下行走</div><div class="nl"><span class="nk">运镜</span>手持跟拍</div></td>
+        </tr>
+        <tr>
+          <td class="sn">134</td>
+          <td class="fr"><a href="frames/shot_134.jpg" target="_blank"><img loading="lazy" src="frames/shot_134.jpg" alt="shot 134"></a></td>
+          <td class="io">6:14<span class="arr">→</span>6:15</td>
+          <td class="du">1.0s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景，工业天桥钢构</div><div class="nl"><span class="nk">运镜</span>固定/缓移</div></td>
+        </tr>
+        <tr>
+          <td class="sn">135</td>
+          <td class="fr"><a href="frames/shot_135.jpg" target="_blank"><img loading="lazy" src="frames/shot_135.jpg" alt="shot 135"></a></td>
+          <td class="io">6:15<span class="arr">→</span>6:18</td>
+          <td class="du">2.8s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中景，桥上滑行，城市背景</div><div class="nl"><span class="nk">运镜</span>跟拍移动</div></td>
+        </tr>
+        <tr>
+          <td class="sn">136</td>
+          <td class="fr"><a href="frames/shot_136.jpg" target="_blank"><img loading="lazy" src="frames/shot_136.jpg" alt="shot 136"></a></td>
+          <td class="io">6:18<span class="arr">→</span>6:20</td>
+          <td class="du">1.9s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>低机位特写，滑板甲板 POV</div><div class="nl"><span class="nk">运镜</span>滑板POV疾驰</div></td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="group is-peak" id="seg9">
+      <div class="ghead">
+        <span class="num">09</span>
+        <h2>歌词高潮 / 从幻梦中惊醒</h2>
+        <span class="time">6:19–6:43</span><span class="tag">高潮</span>
+        <span class="cnt">8 镜头</span>
+      </div>
+      <div class="ctx">
+        <p><span class="lab">台词</span>英文歌词：Since I was seventeen（自从十七岁起）／Now we wake from a dream（如今从幻梦中惊醒）／Well baby what was that（难道这一切都不重要吗）。</p>
+        <p><span class="lab">音乐</span>能量峰值②（约-8dB，全片最强），纯歌词/音乐驱动。</p>
+        <p><span class="lab">镜头</span>桥下行走 → 滑板长板 POV 贴地疾驰（低机位）→ 穿过工业天桥与逆光路面；纯卡点montage制造『动起来、醒过来』的体感节奏。</p>
+      </div>
+      <table class="shots">
+        <thead><tr><th>#</th><th>画面</th><th>入–出</th><th>时长</th><th>节奏</th><th>备注（调色/构图/运镜）</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="sn">137</td>
+          <td class="fr"><a href="frames/shot_137.jpg" target="_blank"><img loading="lazy" src="frames/shot_137.jpg" alt="shot 137"></a></td>
+          <td class="io">6:20<span class="arr">→</span>6:21</td>
+          <td class="du">1.0s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>低机位特写，滑板轮贴地疾驰</div><div class="nl"><span class="nk">运镜</span>滑板POV移动，强运动模糊</div></td>
+        </tr>
+        <tr>
+          <td class="sn">138</td>
+          <td class="fr"><a href="frames/shot_138.jpg" target="_blank"><img loading="lazy" src="frames/shot_138.jpg" alt="shot 138"></a></td>
+          <td class="io">6:21<span class="arr">→</span>6:24</td>
+          <td class="du">2.6s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景背影，桥下逆光行走</div><div class="nl"><span class="nk">运镜</span>手持跟拍</div></td>
+        </tr>
+        <tr>
+          <td class="sn">139</td>
+          <td class="fr"><a href="frames/shot_139.jpg" target="_blank"><img loading="lazy" src="frames/shot_139.jpg" alt="shot 139"></a></td>
+          <td class="io">6:24<span class="arr">→</span>6:26</td>
+          <td class="du">2.1s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景背影，路面滑行</div><div class="nl"><span class="nk">运镜</span>跟拍移动</div></td>
+        </tr>
+        <tr>
+          <td class="sn">140</td>
+          <td class="fr"><a href="frames/shot_140.jpg" target="_blank"><img loading="lazy" src="frames/shot_140.jpg" alt="shot 140"></a></td>
+          <td class="io">6:26<span class="arr">→</span>6:29</td>
+          <td class="du">3.0s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>低机位特写，滑板路面 POV</div><div class="nl"><span class="nk">运镜</span>滑板POV疾驰，逆光</div></td>
+        </tr>
+        <tr>
+          <td class="sn">141</td>
+          <td class="fr"><a href="frames/shot_141.jpg" target="_blank"><img loading="lazy" src="frames/shot_141.jpg" alt="shot 141"></a></td>
+          <td class="io">6:29<span class="arr">→</span>6:33</td>
+          <td class="du">4.2s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中景，人滑行远去（动态模糊）</div><div class="nl"><span class="nk">运镜</span>跟拍/甩动</div></td>
+        </tr>
+        <tr>
+          <td class="sn">142</td>
+          <td class="fr"><a href="frames/shot_142.jpg" target="_blank"><img loading="lazy" src="frames/shot_142.jpg" alt="shot 142"></a></td>
+          <td class="io">6:33<span class="arr">→</span>6:36</td>
+          <td class="du">2.7s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景背影，提板走向大桥</div><div class="nl"><span class="nk">运镜</span>手持跟拍</div></td>
+        </tr>
+        <tr>
+          <td class="sn">143</td>
+          <td class="fr"><a href="frames/shot_143.jpg" target="_blank"><img loading="lazy" src="frames/shot_143.jpg" alt="shot 143"></a></td>
+          <td class="io">6:36<span class="arr">→</span>6:37</td>
+          <td class="du">1.2s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景，穿行绿林小径（结构下）</div><div class="nl"><span class="nk">运镜</span>手持跟随</div></td>
+        </tr>
+        <tr>
+          <td class="sn">144</td>
+          <td class="fr"><a href="frames/shot_144.jpg" target="_blank"><img loading="lazy" src="frames/shot_144.jpg" alt="shot 144"></a></td>
+          <td class="io">6:37<span class="arr">→</span>6:40</td>
+          <td class="du">2.6s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景仰拍，桥底钢桁架</div><div class="nl"><span class="nk">运镜</span>固定/缓移</div></td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="group" id="seg10">
+      <div class="ghead">
+        <span class="num">10</span>
+        <h2>别忘记你在乎什么</h2>
+        <span class="time">6:43–7:21</span>
+        <span class="cnt">15 镜头</span>
+      </div>
+      <div class="ctx">
+        <p><span class="lab">台词</span>「就算身处这个人人都在卷生卷死的环境中，也依然会有人愿意洞察背后那个真正让人饥饿的原因。这也许与追求数据增长的目标不同，但完全没有关系。在谁都可以上传内容、成为创作者的时代，趋势瞬息万变，初衷可能随之动摇，但至少不要忘记你所在乎什么、是什么让你为自己感到骄傲；最重要的，是请尽可能表达出你真实的心声。」</p>
+        <p><span class="lab">音乐</span>中段能量回升（约-16dB），口播稳定。</p>
+        <p><span class="lab">镜头</span>在高架钢桁架上攀爬/俯身（戴领夹麦边走边讲）→ 双脚悬在高架外、车流在下 → 坐在钢梁上俯瞰高速 → 绿地小径航拍；用身体悬置的实拍风险，给『表达真实心声』加重。</p>
+      </div>
+      <table class="shots">
+        <thead><tr><th>#</th><th>画面</th><th>入–出</th><th>时长</th><th>节奏</th><th>备注（调色/构图/运镜）</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="sn">145</td>
+          <td class="fr"><a href="frames/shot_145.jpg" target="_blank"><img loading="lazy" src="frames/shot_145.jpg" alt="shot 145"></a></td>
+          <td class="io">6:40<span class="arr">→</span>6:45</td>
+          <td class="du">5.4s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中近景，钢桁架上人物，边走边讲</div><div class="nl"><span class="nk">运镜</span>手持跟拍</div></td>
+        </tr>
+        <tr>
+          <td class="sn">146</td>
+          <td class="fr"><a href="frames/shot_146.jpg" target="_blank"><img loading="lazy" src="frames/shot_146.jpg" alt="shot 146"></a></td>
+          <td class="io">6:45<span class="arr">→</span>6:47</td>
+          <td class="du">2.2s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中景，倚桥栏俯身（领夹麦口播）</div><div class="nl"><span class="nk">运镜</span>手持微晃</div></td>
+        </tr>
+        <tr>
+          <td class="sn">147</td>
+          <td class="fr"><a href="frames/shot_147.jpg" target="_blank"><img loading="lazy" src="frames/shot_147.jpg" alt="shot 147"></a></td>
+          <td class="io">6:47<span class="arr">→</span>6:48</td>
+          <td class="du">1.2s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中近景，倚栏望向远方</div><div class="nl"><span class="nk">运镜</span>手持微晃</div></td>
+        </tr>
+        <tr>
+          <td class="sn">148</td>
+          <td class="fr"><a href="frames/shot_148.jpg" target="_blank"><img loading="lazy" src="frames/shot_148.jpg" alt="shot 148"></a></td>
+          <td class="io">6:48<span class="arr">→</span>6:50</td>
+          <td class="du">1.5s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景俯拍，桥梁钢梁框出下方高速</div><div class="nl"><span class="nk">运镜</span>固定，框架构图</div></td>
+        </tr>
+        <tr>
+          <td class="sn">149</td>
+          <td class="fr"><a href="frames/shot_149.jpg" target="_blank"><img loading="lazy" src="frames/shot_149.jpg" alt="shot 149"></a></td>
+          <td class="io">6:50<span class="arr">→</span>6:52</td>
+          <td class="du">1.8s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中近景，倚栏俯视讲述</div><div class="nl"><span class="nk">运镜</span>手持微晃</div></td>
+        </tr>
+        <tr>
+          <td class="sn">150</td>
+          <td class="fr"><a href="frames/shot_150.jpg" target="_blank"><img loading="lazy" src="frames/shot_150.jpg" alt="shot 150"></a></td>
+          <td class="io">6:52<span class="arr">→</span>6:53</td>
+          <td class="du">1.6s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>大全景俯拍，高速车流</div><div class="nl"><span class="nk">运镜</span>固定，高机位</div></td>
+        </tr>
+        <tr>
+          <td class="sn">151</td>
+          <td class="fr"><a href="frames/shot_151.jpg" target="_blank"><img loading="lazy" src="frames/shot_151.jpg" alt="shot 151"></a></td>
+          <td class="io">6:53<span class="arr">→</span>6:55</td>
+          <td class="du">1.7s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>POV特写俯视，双脚悬于高架外、车流在下</div><div class="nl"><span class="nk">运镜</span>固定/手持，惊险俯角</div></td>
+        </tr>
+        <tr>
+          <td class="sn">152</td>
+          <td class="fr"><a href="frames/shot_152.jpg" target="_blank"><img loading="lazy" src="frames/shot_152.jpg" alt="shot 152"></a></td>
+          <td class="io">6:55<span class="arr">→</span>6:59</td>
+          <td class="du">4.3s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景背影，人立桥底钢构</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">153</td>
+          <td class="fr"><a href="frames/shot_153.jpg" target="_blank"><img loading="lazy" src="frames/shot_153.jpg" alt="shot 153"></a></td>
+          <td class="io">6:59<span class="arr">→</span>7:01</td>
+          <td class="du">1.7s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>POV俯视特写，悬脚看高速</div><div class="nl"><span class="nk">运镜</span>固定/手持</div></td>
+        </tr>
+        <tr>
+          <td class="sn">154</td>
+          <td class="fr"><a href="frames/shot_154.jpg" target="_blank"><img loading="lazy" src="frames/shot_154.jpg" alt="shot 154"></a></td>
+          <td class="io">7:01<span class="arr">→</span>7:02</td>
+          <td class="du">1.4s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景，坐钢梁俯瞰高速，人物画左、纵深引导</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">155</td>
+          <td class="fr"><a href="frames/shot_155.jpg" target="_blank"><img loading="lazy" src="frames/shot_155.jpg" alt="shot 155"></a></td>
+          <td class="io">7:02<span class="arr">→</span>7:08</td>
+          <td class="du">6.0s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景，人坐钢梁、下方车流</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">156</td>
+          <td class="fr"><a href="frames/shot_156.jpg" target="_blank"><img loading="lazy" src="frames/shot_156.jpg" alt="shot 156"></a></td>
+          <td class="io">7:08<span class="arr">→</span>7:10</td>
+          <td class="du">2.1s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>大全景航拍俯视，绿地 S 形小径</div><div class="nl"><span class="nk">运镜</span>航拍，缓移俯视</div></td>
+        </tr>
+        <tr>
+          <td class="sn">157</td>
+          <td class="fr"><a href="frames/shot_157.jpg" target="_blank"><img loading="lazy" src="frames/shot_157.jpg" alt="shot 157"></a></td>
+          <td class="io">7:10<span class="arr">→</span>7:13</td>
+          <td class="du">2.2s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中近景，坐钢梁讲述</div><div class="nl"><span class="nk">运镜</span>手持微晃</div></td>
+        </tr>
+        <tr>
+          <td class="sn">158</td>
+          <td class="fr"><a href="frames/shot_158.jpg" target="_blank"><img loading="lazy" src="frames/shot_158.jpg" alt="shot 158"></a></td>
+          <td class="io">7:13<span class="arr">→</span>7:19</td>
+          <td class="du">6.1s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>大全景，桥梁钢构上人物极小</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        <tr>
+          <td class="sn">159</td>
+          <td class="fr"><a href="frames/shot_159.jpg" target="_blank"><img loading="lazy" src="frames/shot_159.jpg" alt="shot 159"></a></td>
+          <td class="io">7:19<span class="arr">→</span>7:21</td>
+          <td class="du">2.7s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>黑场过渡</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="group" id="seg11">
+      <div class="ghead">
+        <span class="num">11</span>
+        <h2>元层自白 / 行动号召</h2>
+        <span class="time">7:21–8:31</span>
+        <span class="cnt">1 镜头</span>
+      </div>
+      <div class="ctx">
+        <p><span class="lab">台词</span>「上世纪末，电影的平均镜头时长在 6–8 秒，而现在几乎每 3 秒就要切一次画面；我这期视频对镜讲话的部分，平均镜头时长刚好 2 秒。当注意力不断被压缩、旧形式越来越难承载新节奏，我们到底能采取怎样建设性的行动？我想我提供了一个例子——在当下努力创作，可以达到怎样的完成度。我若能做到，相信你也一定可以。期待更多人加入做这类视频，一起从产业结构上改变内容创作的生态。接下来我希望维持这种不受干扰的叙事方式；理念契合的品牌也欢迎联系我。希望我们尽快相见。」</p>
+        <p><span class="lab">音乐</span>退到较静（约-24dB），人声为主，给收口让位。</p>
+        <p><span class="lab">镜头</span>单一连续长镜（约70秒）——白T手持麦克风、带书架房间、侧窗自然光的稳定中景；亲手报出自己的平均镜头时长，把『形式』摊开当『论据』。</p>
+      </div>
+      <table class="shots">
+        <thead><tr><th>#</th><th>画面</th><th>入–出</th><th>时长</th><th>节奏</th><th>备注（调色/构图/运镜）</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="sn">160</td>
+          <td class="fr"><a href="frames/shot_160.jpg" target="_blank"><img loading="lazy" src="frames/shot_160.jpg" alt="shot 160"></a></td>
+          <td class="io">7:21<span class="arr">→</span>8:31</td>
+          <td class="du">69.8s</td>
+          <td class="rh"><span class="pace long">长镜</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>中景，白T手持麦直面镜头，书架房间侧窗光</div><div class="nl"><span class="nk">运镜</span>固定，约70s一镜到底</div></td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="group" id="seg12">
+      <div class="ghead">
+        <span class="num">12</span>
+        <h2>幕后混剪 / 片尾</h2>
+        <span class="time">8:31–8:43</span>
+        <span class="cnt">3 镜头</span>
+      </div>
+      <div class="ctx">
+        <p><span class="lab">台词</span>（无旁白）字幕『改变内容创作的生态』余韵 → 片尾卡：羊闻道制作。</p>
+        <p><span class="lab">音乐</span>片尾花絮配乐回升（约-13dB），快速回收。</p>
+        <p><span class="lab">镜头</span>分屏花絮——挑杆收音/案头俯拍/公寓拍摄 + 电视雪花上的手影回扣 → 房间空镜叠『羊闻道制作』；以揭示制作过程收尾，呼应开场坦诚人格并集中回收母题。</p>
+      </div>
+      <table class="shots">
+        <thead><tr><th>#</th><th>画面</th><th>入–出</th><th>时长</th><th>节奏</th><th>备注（调色/构图/运镜）</th></tr></thead>
+        <tbody>
+        <tr>
+          <td class="sn">161</td>
+          <td class="fr"><a href="frames/shot_161.jpg" target="_blank"><img loading="lazy" src="frames/shot_161.jpg" alt="shot 161"></a></td>
+          <td class="io">8:31<span class="arr">→</span>8:35</td>
+          <td class="du">3.3s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>分屏，挑杆收音/案头俯拍幕后</div><div class="nl"><span class="nk">运镜</span>手持/固定拼贴</div></td>
+        </tr>
+        <tr>
+          <td class="sn">162</td>
+          <td class="fr"><a href="frames/shot_162.jpg" target="_blank"><img loading="lazy" src="frames/shot_162.jpg" alt="shot 162"></a></td>
+          <td class="io">8:35<span class="arr">→</span>8:37</td>
+          <td class="du">2.3s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>分屏，拍摄花絮 + 电视雪花上的手影（母题回收）</div><div class="nl"><span class="nk">运镜</span>固定拼贴</div></td>
+        </tr>
+        <tr>
+          <td class="sn">163</td>
+          <td class="fr"><a href="frames/shot_163.jpg" target="_blank"><img loading="lazy" src="frames/shot_163.jpg" alt="shot 163"></a></td>
+          <td class="io">8:37<span class="arr">→</span>8:43</td>
+          <td class="du">6.5s</td>
+          <td class="rh"><span class="pace norm">常规</span></td>
+          <td class="note"><div class="nl"><span class="nk">构图</span>全景空镜，房间叠『羊闻道制作』片尾卡</div><div class="nl"><span class="nk">运镜</span>固定</div></td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <section class="panel tech">
+    <p class="h">关键剪辑 / 视听手法</p>
+    <ol>
+      <li>反钩子的钩子：开场自曝『受够了用钩子开场』，却用坐在高架上的极端取景完成抓注意力——把自我指涉变成风格而非破绽。</li>
+      <li>口播判断＋空镜证据：算法、注意力、垂直化这些抽象词全被翻译成可感画面，A-roll 负责论点，B-roll 负责隐喻与证据。</li>
+      <li>节奏自反：作者亲口报出口播段平均 2 秒/镜（电影常态 6–8 秒）。全片 163 刀、37 个&lt;1s 快切+2 个长镜（结尾 70s），用快切与留白对冲议论疲劳。</li>
+      <li>留白→爆发：每次情绪推高前都插静音/降噪（1:50 / 2:50 / 5:00 / 6:35 谷底），6:10 滑板段推到全片最强 -8dB，落差最大化。</li>
+      <li>信息可视化：把『三向奔赴』『集体意识投射』画成投影维恩图（平台·观众·创作者三圆+问号），让抽象论点直接变成画面。</li>
+      <li>母题反复＋片尾回收：电视雪花、克隆人头、7-Eleven、屋顶、滑板反复出现，片尾分屏花絮把母题集中回收（7-Eleven、雪花之手），形成结构押韵。</li>
+      <li>统一冷调电影感：低饱和暗调 + practical light（台灯/招牌/CRT/逆光）+ 对称与广角鱼眼建立镜头；高处/钢架母题把『维度·余地』具象成物理高度与实拍风险。</li>
+    </ol>
+  </section>
+
+  <p class="foot">数据源 shots.json（叙事）+ shots.txt（163 切点）+ notes.json（逐镜 构图/运镜）· 帧 frames/ 4/3 · 改数据后重跑 render_storyboard.py</p>
+</div>
+</body>
+</html>
