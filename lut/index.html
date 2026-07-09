@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Film Color · LUT — Yvaine</title>
+  <meta name="description" content="Curated film-style color grades with ideal-use tags, shown on one photo from Altay, Xinjiang. 精选电影胶片调色与适用场景。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .lut-hero{padding:120px 0 0;}
+    .lut-hero .section-inner{display:block;}
+    .lut-kicker{font-size:.72rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-3);margin-bottom:18px;}
+    .lut-hero h1{font-family:var(--font-serif);font-weight:400;font-size:clamp(2rem,4.5vw,3rem);letter-spacing:-.02em;line-height:1.15;margin-bottom:20px;}
+    .lut-hero p.lead{font-size:1rem;color:var(--gray-4);line-height:1.85;max-width:600px;}
+    .lut-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px;}
+    .lut-meta .chip{font-size:.76rem;color:var(--gray-4);border:1px solid var(--gray-2);border-radius:100px;padding:6px 15px;background:#fff;}
+    .lut-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:26px;margin-top:8px;}
+    .lc-card{border:1px solid var(--gray-2);border-radius:16px;overflow:hidden;background:#fff;transition:transform .3s var(--ease),box-shadow .3s var(--ease);}
+    .lc-card:hover{transform:translateY(-4px);box-shadow:0 18px 44px rgba(0,0,0,.09);}
+    .lc-thumb{position:relative;aspect-ratio:4/3;background:#0c0c0e;overflow:hidden;}
+    .lc-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;}
+    .lc-before{opacity:1;transition:opacity .4s var(--ease);z-index:2;}
+    .lc-card:hover .lc-before{opacity:0;}
+    .lc-hint{position:absolute;left:10px;bottom:10px;z-index:3;font-size:.68rem;letter-spacing:.04em;color:#fff;background:rgba(0,0,0,.4);backdrop-filter:blur(4px);padding:4px 10px;border-radius:100px;opacity:0;transition:opacity .3s;}
+    .lc-thumb:hover .lc-hint{opacity:1;}
+    .lc-body{padding:16px 18px 18px;}
+    .lc-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
+    .lc-head h3{font-family:var(--font-serif);font-weight:500;font-size:1.25rem;letter-spacing:-.01em;}
+    .lc-no{font-size:.72rem;color:var(--gray-3);font-variant-numeric:tabular-nums;flex-shrink:0;}
+    .lc-desc{font-size:.82rem;color:var(--gray-4);line-height:1.6;margin:7px 0 2px;}
+    .lut-note{margin-top:56px;padding-top:28px;border-top:1px solid var(--gray-2);font-size:.8rem;color:var(--gray-3);line-height:1.8;max-width:620px;}
+    .lang-btn{font-size:.72rem;font-weight:500;letter-spacing:.08em;color:inherit;background:transparent;border:1px solid var(--gray-2);border-radius:100px;padding:5px 12px;cursor:pointer;opacity:.7;transition:opacity .25s,border-color .25s;}
+    .lang-btn:hover{opacity:1;border-color:var(--gray-3);}
+    @media(max-width:768px){ .lut-hero{padding:96px 0 0;} .lut-grid{gap:18px;} }
+  </style>
+</head>
+<body>
+  <nav class="nav nav--solid" id="nav">
+    <a href="../index.html" class="nav-logo">YVAINE</a>
+    <div class="nav-links">
+      <a href="../index.html#storyboard" data-zh="逐镜拆解" data-en="Shot-by-Shot">Shot-by-Shot</a>
+      <a href="../index.html#projects" data-zh="项目" data-en="Projects">Projects</a>
+      <a href="index.html" data-zh="调色" data-en="LUT">LUT</a>
+      <a href="../index.html#links" data-zh="链接" data-en="Links">Links</a>
+      <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
+    </div>
+  </nav>
+
+  <header class="section lut-hero">
+    <div class="section-inner">
+      <div class="lut-kicker" data-zh="Film Color · 调色" data-en="Film Color · Grading">Film Color · 调色</div>
+      <h1 data-zh="LUT 调色 · 电影胶片色板" data-en="LUT Grading · Film Color Board">LUT 调色 · 电影胶片色板</h1>
+      <p class="lead" data-zh="从上百款胶片 / 电影感 LUT 里逐一盲选、按被选频次沉淀下来的 26 组调色。每一组都标了适用场景，方便你按需取用。下方所有示例，都基于我在新疆阿勒泰雪山的同一张实拍照片，并已统一亮度，方便横向对比真实倾向。鼠标悬停任意一张可看调色前的原图。" data-en="26 color grades distilled from a blind pick across hundreds of film &amp; cinematic LUTs, ranked by how often we chose them. Each is tagged with its ideal scene. Every example below uses one photo from my trip to Altay, Xinjiang — brightness-normalized for a fair, side-by-side read. Hover any card to see the shot before grading.">从上百款胶片 / 电影感 LUT 里逐一盲选、按被选频次沉淀下来的 26 组调色。每一组都标了适用场景，方便你按需取用。下方所有示例，都基于我在新疆阿勒泰雪山的同一张实拍照片，并已统一亮度，方便横向对比真实倾向。鼠标悬停任意一张可看调色前的原图。</p>
+      <div class="lut-meta">
+        <span class="chip" data-zh="26 组调色" data-en="26 grades">26 组调色</span>
+        <span class="chip" data-zh="场景化命名" data-en="Scene-based names">场景化命名</span>
+        <span class="chip" data-zh="阿勒泰雪山实拍示例" data-en="Shot in Altay, Xinjiang">阿勒泰雪山实拍示例</span>
+        <span class="chip" data-zh="悬停对比原图" data-en="Hover to compare">悬停对比原图</span>
+      </div>
+    </div>
+  </header>
+
+  <section class="section" style="padding-top:44px;">
+    <div class="section-inner" style="display:block;">
+      <div class="lut-grid">
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E9%98%B4%E5%A4%A9%E6%B8%85%E5%86%B7.jpg" loading="lazy" alt="阴天清冷">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="阴天清冷" data-en="Overcast Cool">阴天清冷</h3>
+            <span class="lc-no">01</span>
+          </div>
+          <p class="lc-desc" data-zh="阴天 · 室内 · 清冷通透，低饱和不寡淡" data-en="Overcast · indoor, clean cool tones, low-sat not flat">阴天 · 室内 · 清冷通透，低饱和不寡淡</p>
+        </div>
+      </article>
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E9%83%BD%E5%B8%82%E7%94%B5%E5%BD%B1%E6%84%9F.jpg" loading="lazy" alt="都市电影感">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="都市电影感" data-en="Urban Cinematic">都市电影感</h3>
+            <span class="lc-no">02</span>
+          </div>
+          <p class="lc-desc" data-zh="城市街景 · 扫街，青蓝电影调" data-en="City streets · cyan-blue cinematic grade">城市街景 · 扫街，青蓝电影调</p>
+        </div>
+      </article>
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E8%A1%97%E6%8B%8D%E8%B4%9F%E7%89%87.jpg" loading="lazy" alt="街拍负片">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="街拍负片" data-en="Street Negative">街拍负片</h3>
+            <span class="lc-no">03</span>
+          </div>
+          <p class="lc-desc" data-zh="日常街拍 · 纪实，理光负冲胶片感" data-en="Everyday street · documentary, Ricoh negative feel">日常街拍 · 纪实，理光负冲胶片感</p>
+        </div>
+      </article>
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E6%B8%85%E9%80%8F%E6%97%A5%E7%B3%BB.jpg" loading="lazy" alt="清透日系">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="清透日系" data-en="Airy Japanese">清透日系</h3>
+            <span class="lc-no">04</span>
+          </div>
+          <p class="lc-desc" data-zh="晴天外景 · 日系人像，明亮奶油感" data-en="Sunny outdoor · JP portrait, bright &amp; creamy">晴天外景 · 日系人像，明亮奶油感</p>
+        </div>
+      </article>
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E6%97%85%E8%A1%8C%E5%A4%A7%E7%89%87.jpg" loading="lazy" alt="旅行大片">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="旅行大片" data-en="Travel Epic">旅行大片</h3>
+            <span class="lc-no">05</span>
+          </div>
+          <p class="lc-desc" data-zh="旅行风光 · Vlog，宽银幕电影蓝" data-en="Travel scenery · Vlog, widescreen cinematic blue">旅行风光 · Vlog，宽银幕电影蓝</p>
+        </div>
+      </article>
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E5%9F%8E%E5%B8%82%E8%A1%97%E5%A4%B4.jpg" loading="lazy" alt="城市街头">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="城市街头" data-en="City Night">城市街头</h3>
+            <span class="lc-no">06</span>
+          </div>
+          <p class="lc-desc" data-zh="夜晚 · 都市街头，冷峻氛围" data-en="Night · urban streets, cold &amp; moody">夜晚 · 都市街头，冷峻氛围</p>
+        </div>
+      </article>
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E6%97%A5%E5%B8%B8%E6%B7%A1%E9%9B%85.jpg" loading="lazy" alt="日常淡雅">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="日常淡雅" data-en="Everyday Muted">日常淡雅</h3>
+            <span class="lc-no">07</span>
+          </div>
+          <p class="lc-desc" data-zh="通勤 · 生活记录，干净耐看" data-en="Commute · daily life, clean and timeless">通勤 · 生活记录，干净耐看</p>
+        </div>
+      </article>
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E9%9D%92%E6%A9%99%E5%A4%96%E6%99%AF.jpg" loading="lazy" alt="青橙外景">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="青橙外景" data-en="Teal &amp; Orange">青橙外景</h3>
+            <span class="lc-no">08</span>
+          </div>
+          <p class="lc-desc" data-zh="外景人像 · 绿植场景，青橙对比" data-en="Outdoor portrait · greenery, teal-orange contrast">外景人像 · 绿植场景，青橙对比</p>
+        </div>
+      </article>
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E5%86%B7%E9%9D%92%E6%B0%9B%E5%9B%B4.jpg" loading="lazy" alt="冷青氛围">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="冷青氛围" data-en="Cool Cyan">冷青氛围</h3>
+            <span class="lc-no">09</span>
+          </div>
+          <p class="lc-desc" data-zh="阴天 · 极简 · 建筑，中性冷青" data-en="Overcast · minimal · architecture, neutral cyan">阴天 · 极简 · 建筑，中性冷青</p>
+        </div>
+      </article>
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E6%B5%93%E9%83%81%E9%9D%92%E6%A9%99.jpg" loading="lazy" alt="浓郁青橙">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="浓郁青橙" data-en="Bold Teal-Orange">浓郁青橙</h3>
+            <span class="lc-no">10</span>
+          </div>
+          <p class="lc-desc" data-zh="海边 · 公路大片，强烈青橙" data-en="Seaside · road-trip epic, strong teal &amp; orange">海边 · 公路大片，强烈青橙</p>
+        </div>
+      </article>
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E5%AF%8C%E5%A3%AB%E4%BA%BA%E5%83%8F.jpg" loading="lazy" alt="富士人像">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="富士人像" data-en="Fuji Portrait">富士人像</h3>
+            <span class="lc-no">11</span>
+          </div>
+          <p class="lc-desc" data-zh="人像 · 肤色优先，富士负片柔和" data-en="Portrait · skin-first, soft Fuji negative">人像 · 肤色优先，富士负片柔和</p>
+        </div>
+      </article>
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E5%A4%9C%E6%99%AF%E8%83%B6%E7%89%87.jpg" loading="lazy" alt="夜景胶片">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="夜景胶片" data-en="Night Film">夜景胶片</h3>
+            <span class="lc-no">12</span>
+          </div>
+          <p class="lc-desc" data-zh="夜景 · 暗光 · 暖灯，电影胶片质感" data-en="Night · low light · warm lamps, film grain">夜景 · 暗光 · 暖灯，电影胶片质感</p>
+        </div>
+      </article>
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E6%A3%AE%E7%B3%BB%E7%BB%BF%E8%B0%83.jpg" loading="lazy" alt="森系绿调">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="森系绿调" data-en="Forest Green">森系绿调</h3>
+            <span class="lc-no">13</span>
+          </div>
+          <p class="lc-desc" data-zh="森林 · 草木 · 自然，通透绿调" data-en="Forest · foliage · nature, clean green">森林 · 草木 · 自然，通透绿调</p>
+        </div>
+      </article>
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E5%A4%8D%E5%8F%A4%E8%83%B6%E7%89%87.jpg" loading="lazy" alt="复古胶片">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="复古胶片" data-en="Retro Film">复古胶片</h3>
+            <span class="lc-no">14</span>
+          </div>
+          <p class="lc-desc" data-zh="复古氛围 · 旧时光，低对比褪色" data-en="Vintage mood · old times, low-contrast faded">复古氛围 · 旧时光，低对比褪色</p>
+        </div>
+      </article>
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E5%AF%8C%E5%A3%AB%E6%B8%85%E9%80%8F.jpg" loading="lazy" alt="富士清透">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="富士清透" data-en="Fuji Clean">富士清透</h3>
+            <span class="lc-no">15</span>
+          </div>
+          <p class="lc-desc" data-zh="小清新人像，富士清透直出感" data-en="Fresh portrait, Fuji clean straight-out look">小清新人像，富士清透直出感</p>
+        </div>
+      </article>
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E6%9A%97%E8%B0%83%E5%86%B7%E7%94%B5%E5%BD%B1.jpg" loading="lazy" alt="暗调冷电影">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="暗调冷电影" data-en="Dark Cool Cinema">暗调冷电影</h3>
+            <span class="lc-no">16</span>
+          </div>
+          <p class="lc-desc" data-zh="情绪 · 夜戏，冷调故事感" data-en="Mood · night scenes, cold storytelling">情绪 · 夜戏，冷调故事感</p>
+        </div>
+      </article>
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E6%9F%AF%E8%BE%BE%E6%97%A5%E5%85%89%E8%83%B6%E7%89%87.jpg" loading="lazy" alt="柯达日光胶片">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="柯达日光胶片" data-en="Kodak Daylight">柯达日光胶片</h3>
+            <span class="lc-no">17</span>
+          </div>
+          <p class="lc-desc" data-zh="白天外景，柯达电影胶片暖调" data-en="Daytime outdoor, Kodak film warmth">白天外景，柯达电影胶片暖调</p>
+        </div>
+      </article>
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E5%85%AB%E5%8D%81%E5%B9%B4%E4%BB%A3%E5%A4%8D%E5%8F%A4.jpg" loading="lazy" alt="八十年代复古">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="八十年代复古" data-en="&#x27;80s Retro">八十年代复古</h3>
+            <span class="lc-no">18</span>
+          </div>
+          <p class="lc-desc" data-zh="怀旧写真，80 年代暖褪色" data-en="Nostalgic portrait, warm &#x27;80s fade">怀旧写真，80 年代暖褪色</p>
+        </div>
+      </article>
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E6%9A%96%E9%98%B3%E6%B7%A1%E9%9B%85.jpg" loading="lazy" alt="暖阳淡雅">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="暖阳淡雅" data-en="Warm Muted">暖阳淡雅</h3>
+            <span class="lc-no">19</span>
+          </div>
+          <p class="lc-desc" data-zh="晴天 · 暖光人像，柔和奶油暖" data-en="Sunny · warm-light portrait, soft creamy warm">晴天 · 暖光人像，柔和奶油暖</p>
+        </div>
+      </article>
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E7%A7%8B%E6%97%A5%E6%9A%96%E8%B0%83.jpg" loading="lazy" alt="秋日暖调">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="秋日暖调" data-en="Autumn Warm">秋日暖调</h3>
+            <span class="lc-no">20</span>
+          </div>
+          <p class="lc-desc" data-zh="秋天 · 逆光，温暖治愈" data-en="Autumn · backlight, warm and healing">秋天 · 逆光，温暖治愈</p>
+        </div>
+      </article>
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E9%98%BF%E5%8B%92%E6%B3%B0%E6%97%B7%E9%87%8E.jpg" loading="lazy" alt="阿勒泰旷野">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="阿勒泰旷野" data-en="Altay Wilderness">阿勒泰旷野</h3>
+            <span class="lc-no">21</span>
+          </div>
+          <p class="lc-desc" data-zh="草原 · 雪山 · 旷野，仿《我的阿勒泰》" data-en="Grassland · snow peaks · open wild scenery">草原 · 雪山 · 旷野，仿《我的阿勒泰》</p>
+        </div>
+      </article>
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E6%9A%96%E8%B0%83%E7%94%B5%E5%BD%B1%E8%83%B6%E7%89%87.jpg" loading="lazy" alt="暖调电影胶片">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="暖调电影胶片" data-en="Warm Cine Film">暖调电影胶片</h3>
+            <span class="lc-no">22</span>
+          </div>
+          <p class="lc-desc" data-zh="室内 · 黄昏 · 暖光，电影胶片" data-en="Indoor · dusk · warm light, cinematic film">室内 · 黄昏 · 暖光，电影胶片</p>
+        </div>
+      </article>
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E4%BD%8E%E9%A5%B1%E5%92%8C%E7%94%B5%E5%BD%B1.jpg" loading="lazy" alt="低饱和电影">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="低饱和电影" data-en="Low-Sat Cinema">低饱和电影</h3>
+            <span class="lc-no">23</span>
+          </div>
+          <p class="lc-desc" data-zh="极简 · 质感，低饱和电影感" data-en="Minimal · texture, desaturated cinematic">极简 · 质感，低饱和电影感</p>
+        </div>
+      </article>
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E6%80%80%E6%97%A7%E8%83%B6%E7%89%87.jpg" loading="lazy" alt="怀旧胶片">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="怀旧胶片" data-en="Nostalgic Film">怀旧胶片</h3>
+            <span class="lc-no">24</span>
+          </div>
+          <p class="lc-desc" data-zh="老照片感 · 旧胶卷，怀旧暖调" data-en="Old-photo feel · old rolls, nostalgic warm">老照片感 · 旧胶卷，怀旧暖调</p>
+        </div>
+      </article>
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E5%BD%B1%E9%99%A2%E8%B4%A8%E6%84%9F2383.jpg" loading="lazy" alt="影院质感2383">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="影院质感2383" data-en="Cinema 2383">影院质感2383</h3>
+            <span class="lc-no">25</span>
+          </div>
+          <p class="lc-desc" data-zh="电影感首选，柯达 2383 放映拷贝调" data-en="Cinematic go-to, Kodak 2383 print emulation">电影感首选，柯达 2383 放映拷贝调</p>
+        </div>
+      </article>
+      <article class="lc-card reveal">
+        <div class="lc-thumb">
+          <img class="lc-after" src="renders/_base.jpg" loading="lazy" alt="original">
+          <img class="lc-before" src="renders/%E6%B8%85%E6%96%B0%E9%80%9A%E9%80%8F.jpg" loading="lazy" alt="清新通透">
+          <span class="lc-hint" data-zh="悬停看原图" data-en="hover for original">悬停看原图</span>
+        </div>
+        <div class="lc-body">
+          <div class="lc-head">
+            <h3 data-zh="清新通透" data-en="Fresh &amp; Clear">清新通透</h3>
+            <span class="lc-no">26</span>
+          </div>
+          <p class="lc-desc" data-zh="亮丽通透 · 日系清新，讨喜直出" data-en="Bright &amp; clear · JP fresh, pleasing SOOC">亮丽通透 · 日系清新，讨喜直出</p>
+        </div>
+      </article>
+      </div>
+      <p class="lut-note" data-zh="示例仅统一了亮度、未做其它精修，实际效果会随你的原片光线与白平衡略有差异。雪景属于冷场景，部分暖调在这张上不易显暖，以场景说明为准。" data-en="Examples are brightness-matched only, with no further retouching; real results vary with your footage&#x27;s light and white balance. Snow is a cool scene, so some warm grades read cooler here — go by the scene tag.">示例仅统一了亮度、未做其它精修，实际效果会随你的原片光线与白平衡略有差异。雪景属于冷场景，部分暖调在这张上不易显暖，以场景说明为准。</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>&copy; 2026 Yvaine</span>
+      <span>Built with intention.</span>
+    </div>
+  </footer>
+  <script>
+    function applyLang(lang){
+      document.documentElement.lang = (lang==='en'?'en':'zh');
+      document.querySelectorAll('[data-zh][data-en]').forEach(function(el){
+        var t = el.dataset[lang]; if(t!=null) el.textContent = t;
+      });
+      var b=document.getElementById('langBtn'); if(b) b.textContent = (lang==='en'?'中':'EN');
+      try{ localStorage.setItem('yv_lang', lang); }catch(e){}
+    }
+    function toggleLang(){
+      var cur = (localStorage.getItem('yv_lang')||'zh');
+      applyLang(cur==='en'?'zh':'en');
+    }
+    (function(){
+      var saved='zh'; try{ saved=localStorage.getItem('yv_lang')||'zh'; }catch(e){}
+      applyLang(saved);
+      var els=document.querySelectorAll('.reveal');
+      if(!('IntersectionObserver' in window)){ els.forEach(function(e){e.classList.add('visible');}); return; }
+      var io=new IntersectionObserver(function(en){ en.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } }); },{threshold:0.06,rootMargin:'0px 0px -8% 0px'});
+      els.forEach(function(e){ io.observe(e); });
+      setTimeout(function(){ els.forEach(function(e){ e.classList.add('visible'); }); },1200);
+    })();
+  </script>
+</body>
+</html>
